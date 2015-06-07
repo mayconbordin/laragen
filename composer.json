@@ -1,0 +1,26 @@
+{
+  "name": "mayconbordin/l5-generator",
+  "description": "Laravel 5 Generator.",
+  "keywords": ["laravel", "generators"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Maycon Bordin",
+      "email": "mayconbordin@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "illuminate/filesystem": "5.0.*",
+    "illuminate/support": "5.0.*",
+    "doctrine/dbal": "~2.5"
+  },
+  "require-dev": {
+    "phpspec/phpspec": "~2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mayconbordin\\Generator\\": "src/"
+    }
+  }
+}
