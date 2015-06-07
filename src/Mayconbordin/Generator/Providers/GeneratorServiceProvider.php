@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Generator;
+<?php namespace Mayconbordin\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +21,23 @@ class GeneratorServiceProvider extends ServiceProvider
         'Scaffold',
         'Form',
     ];
+    
+    /**
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../../../resources/config/generator.php' => config_path('generator.php')
+        ]);
+        
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../../resources/config/generator.php', 'generator'
+        );
+        
+        //$this->loadTranslationsFrom(__DIR__ . '/../../../resources/lang', 'repository');
+    }
     
     /**
      * Register the service provider.

@@ -18,7 +18,17 @@ class ModelGenerator extends Generator
      */
     public function getBasePath()
     {
-        return app_path();
+        return config('generator.model.path', app_path());
+    }
+
+    /**
+     * Get root namespace.
+     *
+     * @return string
+     */
+    public function getRootNamespace()
+    {
+        return config('generator.model.namespace', parent::getRootNamespace());
     }
 
     /**

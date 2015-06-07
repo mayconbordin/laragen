@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Mayconbordin\\Generator\\": "src/"
+      "Mayconbordin\\Generator\\": "src/Mayconbordin/Generator/"
     }
   }
 }

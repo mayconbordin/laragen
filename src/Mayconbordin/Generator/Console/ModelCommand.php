@@ -27,9 +27,9 @@ class ModelCommand extends Command
     public function fire()
     {
         $generator = new ModelGenerator([
-            'name' => $this->argument('name'),
+            'name'     => $this->argument('name'),
             'fillable' => $this->option('fillable'),
-            'force' => $this->option('force'),
+            'force'    => $this->option('force'),
         ]);
 
         $generator->run();

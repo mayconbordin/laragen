@@ -73,7 +73,7 @@ abstract class Generator
     {
         $stub = new Stub($this->stub.'.stub', $this->getReplacements());
 
-        $stub->setBasePath(__DIR__.'/Stubs/');
+        $stub->setBasePath(__DIR__.'/../Stubs/');
 
         return $stub->render();
     }
@@ -159,7 +159,7 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        return $this->getAppNamespace();
+        return config('generator.rootNamespace', $this->getAppNamespace());
     }
 
     /**
