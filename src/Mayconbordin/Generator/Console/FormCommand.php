@@ -26,14 +26,19 @@ class FormCommand extends Command
      */
     public function fire()
     {
-        $generator = new FormGenerator(
-            $this->argument('table'),
-            $this->option('fields')
-        );
+        $generator = new FormGenerator([
+            'table'  => $this->argument('table'),
+            'fields' => $this->option('fields')
+        ]);
         
         if ($this->option('output') == 'console') {
             $this->line($generator->render());
         } else {
+            
+            if (!$this->argument('table')) {
+                throw new \RuntimeException("The table argument is required");
+            }
+        
             $generator->run();
             $this->info('Form created successfully.');
         }

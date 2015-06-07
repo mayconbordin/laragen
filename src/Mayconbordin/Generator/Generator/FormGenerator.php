@@ -3,7 +3,7 @@
 use Mayconbordin\Generator\FormDumpers\FieldsDumper;
 use Mayconbordin\Generator\FormDumpers\TableDumper;
 
-class FormGenerator
+class FormGenerator extends Generator
 {
     /**
      * Get stub name.
@@ -11,32 +11,6 @@ class FormGenerator
      * @var string
      */
     protected $stub = 'form';
-    
-    /**
-     * The name of entity.
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * The form fields.
-     *
-     * @var string
-     */
-    protected $fields;
-
-    /**
-     * The constructor.
-     *
-     * @param string $name
-     * @param string $fields
-     */
-    public function __construct($name = null, $fields = null)
-    {
-        $this->name = $name;
-        $this->fields = $fields;
-    }
 
     /**
      * Render the form.

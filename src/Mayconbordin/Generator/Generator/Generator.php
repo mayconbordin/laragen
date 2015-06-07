@@ -3,6 +3,7 @@
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Mayconbordin\Generator\Exceptions\FileAlreadyExistsException;
 
 abstract class Generator
 {
