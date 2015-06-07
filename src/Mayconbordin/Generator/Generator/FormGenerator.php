@@ -6,6 +6,13 @@ use Mayconbordin\Generator\FormDumpers\TableDumper;
 class FormGenerator
 {
     /**
+     * Get stub name.
+     *
+     * @var string
+     */
+    protected $stub = 'form';
+    
+    /**
      * The name of entity.
      *
      * @var string
@@ -63,5 +70,40 @@ class FormGenerator
     public function renderFromFields()
     {
         return (new FieldsDumper($this->fields))->render();
+    }
+    
+    
+    
+    
+    /**
+     * Get base path of destination file.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return base_path().'/resources/views/';
+    }
+
+    /**
+     * Get destination path for generated file.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->getBasePath().strtolower($this->getName()).'.blade.php';
+    }
+    
+    /**
+     * Get array replacements.
+     *
+     * @return array
+     */
+    public function getReplacements()
+    {
+        return array_merge(parent::getReplacements(), [
+            'fields' => $this->render(),
+        ]);
     }
 }

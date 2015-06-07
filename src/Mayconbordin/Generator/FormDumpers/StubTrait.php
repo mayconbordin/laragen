@@ -1,6 +1,6 @@
 <?php namespace Mayconbordin\Generator\FormDumpers;
 
-use Mayconbordin\Generator\Stub;
+use Mayconbordin\Generator\Generator\Stub;
 
 trait StubTrait
 {

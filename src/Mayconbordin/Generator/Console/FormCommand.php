@@ -30,8 +30,13 @@ class FormCommand extends Command
             $this->argument('table'),
             $this->option('fields')
         );
-
-        $this->line($generator->render());
+        
+        if ($this->option('output') == 'console') {
+            $this->line($generator->render());
+        } else {
+            $generator->run();
+            $this->info('Form created successfully.');
+        }
     }
 
     /**
@@ -55,6 +60,7 @@ class FormCommand extends Command
     {
         return [
             ['fields', 'f', InputOption::VALUE_OPTIONAL, 'The form fields.', null],
+            ['output', 'o', InputOption::VALUE_OPTIONAL, 'Where the result will be written: console (default), view.', 'console'],
         ];
     }
 }

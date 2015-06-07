@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Generator;
+<?php namespace Mayconbordin\Generator\Generator;
 
 class Stub
 {

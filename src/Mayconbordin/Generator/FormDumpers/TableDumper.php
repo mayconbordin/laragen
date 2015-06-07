@@ -1,7 +1,7 @@
 <?php namespace Mayconbordin\Generator\FormDumpers;
 
 use Illuminate\Support\Facades\DB;
-use Mayconbordin\Generator\Stub;
+use Mayconbordin\Generator\Generator\Stub;
 
 class TableDumper
 {
