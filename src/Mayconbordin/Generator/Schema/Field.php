@@ -50,7 +50,7 @@ class Field
     protected $unsigned = false;
 
     /**
-     * @var null|array
+     * @var null|Foreign
      */
     protected $foreign  = null;
 
@@ -250,7 +250,7 @@ class Field
     }
 
     /**
-     * @return array|null
+     * @return Foreign|null
      */
     public function getForeign()
     {
@@ -261,9 +261,9 @@ class Field
      * @param string $table The table that is being referenced
      * @param string $field The field that is being referenced
      */
-    public function setForeign($table, $field = 'id')
+    public function setForeign($table, $field = 'id', $name = null)
     {
-        $this->foreign = ['references' => $field, 'on' => $table];
+        $this->foreign = new Foreign($table, $field, $name);
     }
 
     /**
@@ -271,12 +271,12 @@ class Field
      */
     function __toString()
     {
-        return 'Field{name='.$this->name.', type='.$this->type
+        return 'Field {name='.$this->name.', type='.$this->type
                . ((sizeof($this->arguments) > 0) ? '(' . implode(', ', $this->arguments) . ')' : '')
                . ', unique='.(($this->unique) ? 'true' : 'false').', index='.(($this->index) ? 'true' : 'false')
-               .', default='.(($this->default == null) ? 'null' : $this->default).', nullable='.(($this->nullable) ? 'true' : 'false')
+               . ', default='.(($this->default == null) ? 'null' : $this->default).', nullable='.(($this->nullable) ? 'true' : 'false')
                . ', unsigned='.(($this->unsigned) ? 'true' : 'false')
-               .(($this->foreign != null) ? ', foreign={references='.$this->foreign['references'].', on='.$this->foreign['on'].'}' : '')
+               . (is_null($this->foreign) ? '' : $this->foreign->__toString())
                . '}';
     }
 

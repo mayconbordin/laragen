@@ -38,17 +38,20 @@ class MigrationCommand extends Command
      */
     public function fire(Composer $composer)
     {
-        $this->info( 'Using connection: '. $this->option( 'connection' ) ."\n" );
-        $this->schemaGenerator = new SchemaGenerator(
-            $this->option('connection'),
-            $this->option('defaultIndexNames'),
-            $this->option('defaultFKNames')
-        );
+        if ($this->argument('name') != null) {
+            $this->generateFromCommand();
+        } else {
+            $this->generateFromDatabase();
+        }
 
-        print_r($this->schemaGenerator->getTables());
+        $composer->dumpAutoloads();
+    }
 
-        $meta = (new NameParser())->parse($this->argument('name'));
-        $table = $this->buildTableFromCommand($meta['table']);
+    private function generateFromCommand()
+    {
+        $meta   = (new NameParser())->parse($this->argument('name'));
+        $fields = (new SchemaParser())->parse($this->option('fields'));
+        $table  = new Table($meta['table'], $fields);
 
         $generator = new MigrationGenerator([
             'name'   => $this->argument('name'),
@@ -60,14 +63,55 @@ class MigrationCommand extends Command
         $generator->run();
 
         $this->info('Migration created successfully.');
-
-        $composer->dumpAutoloads();
     }
 
-    private function buildTableFromCommand($tableName)
+    private function generateFromDatabase()
     {
-        $fields = (new SchemaParser())->parse($this->option('fields'));
-        return new Table($tableName, $fields);
+        $this->info('Using connection: '. $this->option( 'connection' ) ."\n");
+        $this->schemaGenerator = new SchemaGenerator(
+            $this->option('connection'),
+            $this->option('defaultIndexNames'),
+            $this->option('defaultFKNames')
+        );
+
+        if ($this->option('tables')) {
+            $tables = explode( ',', $this->option('tables') );
+        } else {
+            $tables = $this->schemaGenerator->getTables();
+        }
+
+        $tables = $this->removeExcludedTables($tables);
+        $this->info('Generating migrations for: '. implode(', ', $tables));
+    }
+
+    /**
+     * Remove all the tables to exclude from the array of tables
+     *
+     * @param $tables
+     *
+     * @return array
+     */
+    protected function removeExcludedTables($tables)
+    {
+        $excludes = $this->getExcludedTables();
+        $tables = array_diff($tables, $excludes);
+        return $tables;
+    }
+    /**
+     * Get a list of tables to exclude
+     *
+     * @return array
+     */
+    protected function getExcludedTables()
+    {
+        $excludes = ['migrations'];
+        $ignore = $this->option('ignore');
+
+        if (!empty($ignore)) {
+            return array_merge($excludes, explode(',', $ignore));
+        }
+
+        return $excludes;
     }
 
     /**
@@ -78,8 +122,7 @@ class MigrationCommand extends Command
     public function getArguments()
     {
         return [
-            ['name', InputArgument::REQUIRED, 'The name of the migration being generated.', null],
-            //['tables', InputArgument::OPTIONAL, 'A list of tables you wish to generate migrations for separated by a comma: users,posts,comments'],
+            ['name', InputArgument::OPTIONAL, 'The name of the migration being generated.', null]
         ];
     }
 
@@ -94,7 +137,9 @@ class MigrationCommand extends Command
             ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
 
-            ['connection', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.', Config::get('database.default')],
+            ['connection', 'c', InputOption::VALUE_OPTIONAL, 'The database connection to use.', Config::get('database.default')],
+            ['tables', 't', InputOption::VALUE_OPTIONAL, 'A list of Tables you wish to Generate Migrations for separated by a comma: users,posts,comments'],
+            ['ignore', 'i', InputOption::VALUE_OPTIONAL, 'A list of Tables you wish to ignore, separated by a comma: users,posts,comments' ],
             ['defaultIndexNames', null, InputOption::VALUE_NONE, 'Don\'t use db index names for migrations'],
             ['defaultFKNames', null, InputOption::VALUE_NONE, 'Don\'t use db foreign key names for migrations'],
         ];

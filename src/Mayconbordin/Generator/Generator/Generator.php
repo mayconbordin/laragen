@@ -41,7 +41,9 @@ abstract class Generator
      * Create new instance of this class.
      *
      * @param string $entity
-     * @param array $options
+     * @param array $options [ name=The name of the entity;
+     *                         force=Whether the file should be created even if it already exists ]
+     *
      */
     public function __construct($entity, array $options = array())
     {

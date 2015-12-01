@@ -1,7 +1,5 @@
 <?php namespace Mayconbordin\Generator\Generator;
 
-use Mayconbordin\Generator\Migrations\NameParser;
-use Mayconbordin\Generator\Migrations\SchemaParser;
 use Mayconbordin\Generator\Schema\Field;
 use Mayconbordin\Generator\Schema\Table;
 
@@ -15,11 +13,35 @@ class MigrationGenerator extends Generator
     protected $stub = 'migration/plain';
 
     /**
+     * @var Table
+     */
+    protected $table;
+
+    /**
+     * @var bool
+     */
+    protected $generateForeign;
+
+    /**
+     * @var bool
+     */
+    protected $onlyForeign;
+
+    /**
      * MigrationGenerator constructor.
+     *
+     * @param array $options [ action=The name of the action being performed;
+     *                         table=The table object with its fields;
+     *                         generate_foreign=If the foreign keys should be generated;
+     *                         only_foreign=If only the foreign keys should be generated ]
      */
     public function __construct(array $options = array())
     {
         parent::__construct('migration', $options);
+
+        $this->table           = $options['table'];
+        $this->generateForeign = array_get($options, 'generate_foreign', true);
+        $this->onlyForeign     = array_get($options, 'only_foreign', false);
     }
 
     /**
@@ -104,30 +126,35 @@ class MigrationGenerator extends Generator
      */
     private function addColumn(Field $field)
     {
-        $syntax = sprintf("\$table->%s('%s')", $field->getType(), $field->getName());
+        $syntax = '';
 
-        // If there are arguments for the schema type, like decimal('amount', 5, 2)
-        // then we have to remember to work those in.
-        if ($field->hasArguments()) {
-            $syntax = substr($syntax, 0, -1) . ', ';
-            $syntax .= implode(', ', $field->getArguments()) . ')';
+        if (!$this->onlyForeign) {
+            $syntax = sprintf("\$table->%s('%s')", $field->getType(), $field->getName());
+
+            // If there are arguments for the schema type, like decimal('amount', 5, 2)
+            // then we have to remember to work those in.
+            if ($field->hasArguments()) {
+                $syntax = substr($syntax, 0, -1) . ', ';
+                $syntax .= implode(', ', $field->getArguments()) . ')';
+            }
+
+            if ($field->isUnique())   $syntax .= "->unique()";
+            if ($field->isNullable()) $syntax .= "->nullable()";
+            if ($field->isUnsigned()) $syntax .= "->unsigned()";
+            if ($field->hasDefault()) $syntax .= "->default({$field->getDefault()})";
+
+            $syntax .= ';';
+
+            if ($field->isIndex()) {
+                $syntax .= "\n" . str_repeat(' ', 12) . "\$table->index('{$field->getName()}')";
+            }
         }
 
-        if ($field->isUnique())   $syntax .= "->unique()";
-        if ($field->isNullable()) $syntax .= "->nullable()";
-        if ($field->isUnsigned()) $syntax .= "->unsigned()";
-        if ($field->hasDefault()) $syntax .= "->default({$field->getDefault()})";
-
-        $syntax .= ';';
-
-        if ($field->isIndex()) {
-            $syntax .= "\n" . str_repeat(' ', 12) . "\$table->index('{$field->getName()}')";
-        }
-
-        if ($field->hasForeign()) {
+        if (($field->hasForeign() && $this->generateForeign) || $this->onlyForeign) {
             $foreign = $field->getForeign();
             $syntax .= "\n" . str_repeat(' ', 12)
-                    . sprintf("\$table->foreign('%s')->references('%s')->on('%s');", $field->getName(), $foreign['references'], $foreign['on']);
+                    . sprintf("\$table->foreign('%s')->references('%s')->on('%s');", $this->getForeignKeyName($field),
+                              $foreign->getReferences(), $foreign->getOn());
         }
 
         return $syntax;
@@ -141,15 +168,38 @@ class MigrationGenerator extends Generator
      */
     private function dropColumn(Field $field)
     {
-        $syntax = "";
+        $syntax = '';
 
-        if ($field->hasForeign()) {
-            $syntax .= sprintf("\$table->dropForeign('%s_%s_foreign');", $this->table->getName(), $field->getName())
+        if (($field->hasForeign() && $this->generateForeign) || $this->onlyForeign) {
+            $syntax .= sprintf("\$table->dropForeign('%s');", $this->getForeignKeyName($field, true))
                     . "\n" . str_repeat(' ', 12);
         }
 
-        $syntax .= sprintf("\$table->dropColumn('%s');", $field->getName());
+        if (!$this->onlyForeign) {
+            $syntax .= sprintf("\$table->dropColumn('%s');", $field->getName());
+        }
 
         return $syntax;
+    }
+
+    /**
+     * @param Field $field
+     * @param bool $isDrop
+     * @return string
+     */
+    private function getForeignKeyName(Field $field, $isDrop = false)
+    {
+        $foreign = $field->getForeign();
+        $name    = $field->getName();
+
+        if (!empty($foreign->getName())) {
+            $name = $foreign->getName();
+        }
+
+        if ($isDrop && empty($foreign->getName())) {
+            $name = str_replace(array('-', '.'), '_', sprintf("%s_%s_foreign", $this->table->getName(), $field->getName()));
+        }
+
+        return $name;
     }
 }
