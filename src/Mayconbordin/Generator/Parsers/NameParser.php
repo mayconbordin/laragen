@@ -68,12 +68,16 @@ class NameParser
             case 'make':
                 return 'create';
             case 'delete':
+            case 'remove':
+                return 'delete';
             case 'destroy':
+                return 'drop';
             case 'drop':
-                return 'remove';
             case 'add':
             case 'append':
+                return 'add';
             case 'update':
+                return 'add';
             case 'insert':
                 return 'add';
             default:
