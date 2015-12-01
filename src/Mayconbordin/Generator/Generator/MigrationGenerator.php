@@ -28,6 +28,11 @@ class MigrationGenerator extends Generator
     protected $onlyForeign;
 
     /**
+     * @var string|null
+     */
+    protected $migrationName;
+
+    /**
      * MigrationGenerator constructor.
      *
      * @param array $options [ action=The name of the action being performed;
@@ -42,6 +47,7 @@ class MigrationGenerator extends Generator
         $this->table           = $options['table'];
         $this->generateForeign = array_get($options, 'generate_foreign', true);
         $this->onlyForeign     = array_get($options, 'only_foreign', false);
+        $this->migrationName   = array_get($options, 'migration_name', null);
     }
 
     /**
@@ -51,6 +57,10 @@ class MigrationGenerator extends Generator
      */
     public function getMigrationName()
     {
+        if (!empty($this->migrationName)) {
+            return $this->migrationName;
+        }
+
         return strtolower($this->name);
     }
 

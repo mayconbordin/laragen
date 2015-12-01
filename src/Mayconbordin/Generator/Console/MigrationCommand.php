@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
 use Mayconbordin\Generator\Database\SchemaGenerator;
+use Mayconbordin\Generator\Exceptions\MethodNotFoundException;
 use Mayconbordin\Generator\Generator\MigrationGenerator;
 use Mayconbordin\Generator\Parsers\NameParser;
 use Mayconbordin\Generator\Parsers\SchemaParser;
@@ -82,6 +83,41 @@ class MigrationCommand extends Command
 
         $tables = $this->removeExcludedTables($tables);
         $this->info('Generating migrations for: '. implode(', ', $tables));
+
+        print_r($this->schemaGenerator->getFields('users'));
+    }
+
+    /**
+     * Generate Migrations
+     *
+     * @param  string $method Create Tables or Foreign Keys ['create', 'foreign_keys']
+     * @param  array  $tables List of tables to create migrations for
+     * @throws MethodNotFoundException
+     * @return void
+     */
+    protected function generate($method, $tables)
+    {
+        if ($method == 'create') {
+            $function = 'getFields';
+            $prefix = 'create';
+        } elseif ($method = 'foreign_keys') {
+            $function = 'getForeignKeyConstraints';
+            $prefix = 'add_foreign_keys_to';
+            $method = 'table';
+        } else {
+            throw new MethodNotFoundException($method);
+        }
+
+        foreach ($tables as $table) {
+            $this->migrationName = $prefix .'_'. $table .'_table';
+            $this->method = $method;
+            $this->table  = $table;
+            $this->fields = $this->schemaGenerator->{$function}($table);
+
+            if ($this->fields) {
+
+            }
+        }
     }
 
     /**

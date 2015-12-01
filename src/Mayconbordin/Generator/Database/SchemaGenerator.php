@@ -48,10 +48,10 @@ class SchemaGenerator
         $this->database = $connection->getDatabase();
 
         $this->schema = $connection->getSchemaManager();
-        $this->fieldGenerator = new FieldGenerator();
+        $this->fieldGenerator      = new FieldGenerator();
         $this->foreignKeyGenerator = new ForeignKeyGenerator();
 
-        $this->ignoreIndexNames = $ignoreIndexNames;
+        $this->ignoreIndexNames      = $ignoreIndexNames;
         $this->ignoreForeignKeyNames = $ignoreForeignKeyNames;
     }
 
