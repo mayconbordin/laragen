@@ -91,7 +91,7 @@ class MigrationCommand extends Command
     public function getOptions()
     {
         return [
-            ['fields', 'c', InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
+            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
 
             ['connection', 'c', InputOption::VALUE_OPTIONAL, 'The database connection to use.', Config::get('database.default')],
