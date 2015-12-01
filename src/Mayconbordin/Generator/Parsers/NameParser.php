@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Generator\Migrations;
+<?php namespace Mayconbordin\Generator\Parsers;
 
 class NameParser
 {

@@ -50,27 +50,27 @@ class MigrationGenerator extends Generator
     public function getStub()
     {
         if ($this->action == 'create') {
-            return Stub::createFromPath(__DIR__.'/Stubs/migration/create.stub', [
+            return Stub::createFromPath(__DIR__.'/../Stubs/migration/create.stub', [
                 'class'  => $this->getClass(),
                 'table'  => $this->table->getName(),
                 'fields' => $this->constructSchema(),
             ]);
         } elseif ($this->action == 'add') {
-            return Stub::createFromPath(__DIR__.'/Stubs/migration/add.stub', [
+            return Stub::createFromPath(__DIR__.'/../Stubs/migration/add.stub', [
                 'class'       => $this->getClass(),
                 'table'       => $this->table->getName(),
                 'fields_up'   => $this->constructSchema(),
                 'fields_down' => $this->constructSchema('drop'),
             ]);
         } elseif ($this->action == 'delete') {
-            return Stub::createFromPath(__DIR__.'/Stubs/migration/delete.stub', [
+            return Stub::createFromPath(__DIR__.'/../Stubs/migration/delete.stub', [
                 'class'       => $this->getClass(),
                 'table'       => $this->table->getName(),
                 'fields_down' => $this->constructSchema(),
                 'fields_up'   => $this->constructSchema('drop'),
             ]);
         } elseif ($this->action == 'drop') {
-            return Stub::createFromPath(__DIR__.'/Stubs/migration/drop.stub', [
+            return Stub::createFromPath(__DIR__.'/../Stubs/migration/drop.stub', [
                 'class'  => $this->getClass(),
                 'table'  => $this->table->getName(),
                 'fields' => $this->constructSchema(),

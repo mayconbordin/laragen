@@ -3,8 +3,8 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
 use Mayconbordin\Generator\Generator\MigrationGenerator;
-use Mayconbordin\Generator\Migrations\NameParser;
-use Mayconbordin\Generator\Migrations\SchemaParser;
+use Mayconbordin\Generator\Parsers\NameParser;
+use Mayconbordin\Generator\Parsers\SchemaParser;
 use Mayconbordin\Generator\Schema\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
