@@ -3,6 +3,9 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
 use Mayconbordin\Generator\Generator\MigrationGenerator;
+use Mayconbordin\Generator\Migrations\NameParser;
+use Mayconbordin\Generator\Migrations\SchemaParser;
+use Mayconbordin\Generator\Schema\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -27,10 +30,14 @@ class MigrationCommand extends Command
      */
     public function fire(Composer $composer)
     {
+        $meta = (new NameParser())->parse($this->argument('name'));
+        $table = $this->buildTableFromCommand($meta['table']);
+
         $generator = new MigrationGenerator([
-            'name' => $this->argument('name'),
-            'fields' => $this->option('fields'),
-            'force' => $this->option('force'),
+            'name'   => $this->argument('name'),
+            'action' => $meta['action'],
+            'force'  => $this->option('force'),
+            'table'  => $table
         ]);
 
         $generator->run();
@@ -38,6 +45,12 @@ class MigrationCommand extends Command
         $this->info('Migration created successfully.');
 
         $composer->dumpAutoloads();
+    }
+
+    private function buildTableFromCommand($tableName)
+    {
+        $fields = (new SchemaParser())->parse($this->option('fields'));
+        return new Table($tableName, $fields);
     }
 
     /**

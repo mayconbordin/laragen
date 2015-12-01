@@ -5,6 +5,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Mayconbordin\Generator\Exceptions\FileAlreadyExistsException;
 
+use \Config;
+
 abstract class Generator
 {
     use AppNamespaceDetectorTrait;
@@ -31,14 +33,21 @@ abstract class Generator
     protected $stub;
 
     /**
+     * @var string
+     */
+    protected $entity;
+
+    /**
      * Create new instance of this class.
      *
+     * @param string $entity
      * @param array $options
      */
-    public function __construct(array $options = array())
+    public function __construct($entity, array $options = array())
     {
+        $this->entity     = $entity;
         $this->filesystem = new Filesystem();
-        $this->options = $options;
+        $this->options    = $options;
     }
 
     /**
@@ -87,8 +96,8 @@ abstract class Generator
     public function getReplacements()
     {
         return [
-            'class' => $this->getClass(),
-            'namespace' => $this->getNamespace(),
+            'class'          => $this->getClass(),
+            'namespace'      => $this->getNamespace(),
             'root_namespace' => $this->getRootNamespace(),
         ];
     }
@@ -100,7 +109,11 @@ abstract class Generator
      */
     public function getBasePath()
     {
-        return base_path();
+        if (Config::has("generator.{$this->entity}.path")) {
+            return Config::get("generator.{$this->entity}.path");
+        }
+
+        return Config::get('generator.base_path', base_path());
     }
 
     /**
@@ -110,7 +123,17 @@ abstract class Generator
      */
     public function getPath()
     {
-        return $this->getBasePath().'/'.$this->getName().'.php';
+        return $this->getBasePath().'/'.$this->getFileName().'.php';
+    }
+
+    /**
+     * Get the name of the file to be saved on the filesystem.
+     *
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->getName();
     }
 
     /**
@@ -160,7 +183,11 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        return config('generator.rootNamespace', $this->getAppNamespace());
+        if (Config::has("generator.{$this->entity}.namespace")) {
+            return Config::get("generator.{$this->entity}.namespace");
+        }
+
+        return Config::get('generator.root_namespace', $this->getAppNamespace());
     }
 
     /**
@@ -176,11 +203,11 @@ abstract class Generator
 
         $rootNamespace = $this->getRootNamespace();
 
-        if ($rootNamespace == false) {
+        if ($rootNamespace == false || $rootNamespace == null) {
             return;
         }
 
-        return 'namespace '.rtrim($rootNamespace.implode($segments, '\\'), '\\').';';
+        return 'namespace '.rtrim($rootNamespace.implode('\\', $segments), '\\').';';
     }
 
     /**

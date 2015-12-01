@@ -1,7 +1,5 @@
 <?php namespace Mayconbordin\Generator\Exceptions;
 
-use Exception;
-
-class FileAlreadyExistsException extends Exception
+class FileAlreadyExistsException extends GeneratorException
 {
 }

@@ -27,6 +27,7 @@ class FormCommand extends Command
     public function fire()
     {
         $generator = new FormGenerator([
+            'name'   => $this->argument('table'),
             'table'  => $this->argument('table'),
             'fields' => $this->option('fields')
         ]);

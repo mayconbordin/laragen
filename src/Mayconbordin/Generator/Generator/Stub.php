@@ -8,18 +8,21 @@ class Stub
      * @var string
      */
     protected $path;
+
     /**
      * The base path of stub file.
      *
      * @var null|string
      */
     protected static $basePath = null;
+
     /**
      * The replacements array.
      *
      * @var array
      */
     protected $replaces = [];
+
     /**
      * The contructor.
      *
@@ -31,6 +34,7 @@ class Stub
         $this->path = $path;
         $this->replaces = $replaces;
     }
+
     /**
      * Create new self instance.
      *
@@ -43,6 +47,7 @@ class Stub
     {
         return new static($path, $replaces);
     }
+
     /**
      * Create new self instance from full path.
      *
@@ -57,6 +62,7 @@ class Stub
         $stub->setBasePath('');
         return $stub;
     }
+
     /**
      * Set stub path.
      *
@@ -69,6 +75,7 @@ class Stub
         $this->path = $path;
         return $this;
     }
+
     /**
      * Get stub path.
      *
@@ -78,6 +85,7 @@ class Stub
     {
         return static::$basePath.$this->path;
     }
+
     /**
      * Set base path.
      *
@@ -87,6 +95,7 @@ class Stub
     {
         static::$basePath = $path;
     }
+
     /**
      * Get base path.
      *
@@ -96,6 +105,7 @@ class Stub
     {
         return static::$basePath;
     }
+
     /**
      * Get stub contents.
      *
@@ -104,11 +114,14 @@ class Stub
     public function getContents()
     {
         $contents = file_get_contents($this->getPath());
+
         foreach ($this->replaces as $search => $replace) {
             $contents = str_replace('$'.strtoupper($search).'$', $replace, $contents);
         }
+
         return $contents;
     }
+
     /**
      * Get stub contents.
      *
@@ -118,6 +131,7 @@ class Stub
     {
         return $this->getContents();
     }
+
     /**
      * Save stub to specific path.
      *
@@ -130,6 +144,7 @@ class Stub
     {
         return file_put_contents($path.'/'.$filename, $this->getContents());
     }
+
     /**
      * Set replacements array.
      *
@@ -142,6 +157,7 @@ class Stub
         $this->replaces = $replaces;
         return $this;
     }
+
     /**
      * Get replacements.
      *
@@ -151,6 +167,7 @@ class Stub
     {
         return $this->replaces;
     }
+
     /**
      * Handle magic method __toString.
      *

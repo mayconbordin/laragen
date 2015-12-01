@@ -203,7 +203,10 @@ class ScaffoldGenerator
      */
     public function getFormGenerator()
     {
-        return new FormGenerator($this->getEntities(), $this->console->option('fields'));
+        return new FormGenerator([
+            'table'  => $this->getEntities(),
+            'fields' => $this->console->option('fields')
+        ]);
     }
 
     /**

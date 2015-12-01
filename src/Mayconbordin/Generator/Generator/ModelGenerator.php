@@ -12,36 +12,6 @@ class ModelGenerator extends Generator
     protected $stub = 'model';
 
     /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return config('generator.model.path', app_path());
-    }
-
-    /**
-     * Get root namespace.
-     *
-     * @return string
-     */
-    public function getRootNamespace()
-    {
-        return config('generator.model.namespace', parent::getRootNamespace());
-    }
-
-    /**
-     * Get destination path for generated file.
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->getBasePath().'/'.$this->getName().'.php';
-    }
-
-    /**
      * Get array replacements.
      *
      * @return array

@@ -11,16 +11,34 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "illuminate/filesystem": "5.0.*",
-    "illuminate/support": "5.0.*",
+    "illuminate/http": "~5.0|~5.1",
+    "illuminate/config": "~5.0|~5.1",
+    "illuminate/support": "~5.0|~5.1",
+    "illuminate/database": "~5.0|~5.1",
+    "illuminate/pagination": "~5.0|~5.1",
+    "illuminate/console": "~5.0|~5.1",
+    "illuminate/filesystem": "~5.0|~5.1",
+    "illuminate/validation": "~5.0|~5.1",
     "doctrine/dbal": "~2.5"
   },
   "require-dev": {
-    "phpspec/phpspec": "~2.1"
+    "phpunit/phpunit": "~4.0",
+	"phpspec/phpspec": "~2.1",
+    "mockery/mockery": "~0.9.4",
+    "codeception/aspect-mock": "*",
+    "symfony/var-dumper": "~2.7.2"
+  },
+  "archive": {
+    "exclude": ["/tests"]
   },
   "autoload": {
     "psr-4": {
       "Mayconbordin\\Generator\\": "src/Mayconbordin/Generator/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Mayconbordin\\Generator\\Tests\\": "tests/"
     }
   }
 }
