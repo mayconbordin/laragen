@@ -20,6 +20,8 @@ class SchemaParser
      */
     public function parse($schema)
     {
+        if (empty($schema)) return [];
+
         $fields = $this->splitIntoFields($schema);
 
         foreach ($fields as $field) {
