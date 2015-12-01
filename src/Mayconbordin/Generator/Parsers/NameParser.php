@@ -18,7 +18,7 @@ class NameParser
 
         return [
             'action' => $this->getAction($segments),
-            'table' => $this->getTableName($segments)
+            'table'  => $this->getTableName($segments)
         ];
     }
 
