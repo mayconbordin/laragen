@@ -94,7 +94,7 @@ class MigrationCommand extends Command
             ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
 
-            ['connection', 'c', InputOption::VALUE_OPTIONAL, 'The database connection to use.', Config::get('database.default')],
+            ['connection', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.', Config::get('database.default')],
             ['defaultIndexNames', null, InputOption::VALUE_NONE, 'Don\'t use db index names for migrations'],
             ['defaultFKNames', null, InputOption::VALUE_NONE, 'Don\'t use db foreign key names for migrations'],
         ];
