@@ -63,7 +63,7 @@ class MigrationCommand extends Command
 
         $generator->run();
 
-        $this->info('Migration created successfully.');
+        $this->info("Migration {$this->argument('name')} created successfully.");
     }
 
     private function generateFromDatabase()
@@ -85,39 +85,54 @@ class MigrationCommand extends Command
         $this->info('Generating migrations for: '. implode(', ', $tables));
 
         $schema = $this->schemaGenerator->getSchema($tables);
-        print_r($schema);
+
+        $this->info("Setting up Tables and Index Migrations");
+        $date = date('Y_m_d_His');
+        $this->generate('create', $schema, $date);
+
+        $this->info("Setting up Foreign Key Migrations");
+        $date = date('Y_m_d_His', strtotime('+1 second'));
+        $this->generate('foreign_keys', $schema, $date);
+
+        $this->info("Finished!");
     }
 
     /**
      * Generate Migrations
      *
-     * @param  string $method Create Tables or Foreign Keys ['create', 'foreign_keys']
-     * @param  array  $tables List of tables to create migrations for
+     * @param string $method Create Tables or Foreign Keys ['create', 'foreign_keys']
+     * @param array $schema The database schema (list of Table objects)
+     * @param string $date The date to be used for generating the migrations
+     *
      * @throws MethodNotFoundException
-     * @return void
+     * @throws \Mayconbordin\Generator\Exceptions\FileAlreadyExistsException
      */
-    protected function generate($method, $tables)
+    protected function generateFromSchema($method, $schema, $date)
     {
         if ($method == 'create') {
-            $function = 'getFields';
             $prefix = 'create';
         } elseif ($method = 'foreign_keys') {
-            $function = 'getForeignKeyConstraints';
             $prefix = 'add_foreign_keys_to';
-            $method = 'table';
         } else {
             throw new MethodNotFoundException($method);
         }
 
-        foreach ($tables as $table) {
-            $this->migrationName = $prefix .'_'. $table .'_table';
-            $this->method = $method;
-            $this->table  = $table;
-            $this->fields = $this->schemaGenerator->{$function}($table);
+        foreach ($schema as $table) {
+            $migrationName = $date .'_'. $prefix .'_'. $table->getName() .'_table';
 
-            if ($this->fields) {
+            $generator = new MigrationGenerator([
+                'name'             => $migrationName,
+                'raw_name'         => true,
+                'action'           => 'create_simple',
+                'force'            => $this->option('force'),
+                'table'            => $table,
+                'generate_foreign' => ($method == 'foreign_keys'),
+                'only_foreign'     => ($method == 'foreign_keys'),
+            ]);
 
-            }
+            $generator->run();
+
+            $this->info("Migration $migrationName created successfully.");
         }
     }
 
