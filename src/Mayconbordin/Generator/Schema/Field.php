@@ -4,10 +4,38 @@ use Mayconbordin\Generator\Exceptions\InvalidFieldTypeException;
 
 class Field
 {
-    const TYPES = ['bigincrements', 'biginteger', 'binary', 'boolean', 'char', 'date', 'datetime', 'decimal', 'double',
-                   'enum', 'float', 'increments', 'integer', 'json', 'jsonb', 'longtext', 'mediumtext', 'mediuminteger',
-                   'morphs', 'nullabletimestamps', 'remembertoken', 'smallinteger', 'softdeletes', 'string', 'text',
-                   'time', 'tinyinteger', 'timestamp', 'timestamps', 'uuid'];
+    const TYPES = [
+        'bigincrements'      => 'bigIncrements',
+        'biginteger'         => 'bigInteger',
+        'binary'             => 'binary',
+        'boolean'            => 'boolean',
+        'char'               => 'char',
+        'date'               => 'date',
+        'datetime'           => 'datetime',
+        'decimal'            => 'decimal',
+        'double'             => 'double',
+        'enum'               => 'enum',
+        'float'              => 'float',
+        'increments'         => 'increments',
+        'integer'            => 'integer',
+        'json'               => 'json',
+        'jsonb'              => 'jsonb',
+        'longtext'           => 'longText',
+        'mediumtext'         => 'mediumText',
+        'mediuminteger'      => 'mediumInteger',
+        'morphs'             => 'morphs',
+        'nullabletimestamps' => 'nullableTimestamps',
+        'remembertoken'      => 'rememberToken',
+        'smallinteger'       => 'smallInteger',
+        'softdeletes'        => 'softDeletes',
+        'string'             => 'string',
+        'text'               => 'text',
+        'time'               => 'time',
+        'tinyinteger'        => 'tinyInteger',
+        'timestamp'          => 'timestamp',
+        'timestamps'         => 'timestamps',
+        'uuid'               => 'uuid'
+    ];
 
     /**
      * @var string
@@ -88,7 +116,7 @@ class Field
         $foreign = array_get($options, 'foreign', null);
 
         if ($foreign != null) {
-            $this->setForeign($foreign['on'], $foreign['references']);
+            $this->setForeign($foreign['on'], array_get($foreign, 'references', 'id'), array_get($foreign, 'name', null));
         }
     }
 
@@ -122,11 +150,13 @@ class Field
      */
     public function setType($type)
     {
-        if (!in_array($type, self::TYPES)) {
+        $type = strtolower($type);
+
+        if (!in_array($type, array_keys(self::TYPES))) {
             throw new InvalidFieldTypeException($type);
         }
 
-        $this->type = $type;
+        $this->type = array_get(self::TYPES, $type);
     }
 
     /**
