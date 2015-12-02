@@ -162,7 +162,7 @@ class MigrationGenerator extends Generator
             $syntax .= ';';
 
             if ($field->isIndex()) {
-                $syntax .= "\n" . str_repeat(' ', 12) . "\$table->index('{$field->getName()}')";
+                $syntax .= "\n" . str_repeat(' ', 12) . "\$table->index('{$field->getName()}');";
             }
         }
 

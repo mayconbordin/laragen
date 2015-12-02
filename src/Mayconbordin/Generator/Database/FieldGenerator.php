@@ -145,7 +145,7 @@ class FieldGenerator
                     'nullable' => $nullable,
                     'default'  => $default,
                     'unique'   => ($index && $index->type == 'unique'),
-                    'index'    => ($index && !Str::startsWith($index->name, 'fk')),
+                    'index'    => ($index && !Str::startsWith($index->name, 'fk') && $index->type != 'unique'),
                     'unsigned' => $unsigned
                 ]
             ];
