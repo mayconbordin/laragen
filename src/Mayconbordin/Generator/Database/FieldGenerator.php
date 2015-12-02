@@ -1,6 +1,8 @@
 <?php namespace Mayconbordin\Generator\Database;
 
 use \DB;
+use Illuminate\Support\Str;
+use Mayconbordin\Generator\Schema\Field;
 
 class FieldGenerator
 {
@@ -40,8 +42,9 @@ class FieldGenerator
 
         $indexGenerator = new IndexGenerator($table, $schema, $ignoreIndexNames);
         $fields = $this->setEnum($this->getFields($columns, $indexGenerator), $table);
-        $indexes = $this->getMultiFieldIndexes($indexGenerator);
-        return array_merge($fields, $indexes);
+        $fields = $this->getMultiFieldIndexes($fields, $indexGenerator);
+
+        return $fields;
     }
 
     /**
@@ -72,8 +75,9 @@ class FieldGenerator
     protected function setEnum(array $fields, $table)
     {
         foreach ($this->getEnum($table) as $column) {
-            $fields[$column->column_name]['type'] = 'enum';
-            $fields[$column->column_name]['args'] = str_replace('enum(', 'array(', $column->column_type);
+            $field = $fields[$column->column_name];
+            $field->setType('enum');
+            $field->setArguments(explode(',', str_replace(['enum(', ')'], '', $column->column_type)));
         }
 
         return $fields;
@@ -89,15 +93,16 @@ class FieldGenerator
         $fields = array();
 
         foreach ($columns as $column) {
-            $name = $column->getName();
-            $type = $column->getType()->getName();
-            $length = $column->getLength();
-            $default = $column->getDefault();
+            $name     = $column->getName();
+            $type     = $column->getType()->getName();
+            $length   = $column->getLength();
+            $default  = $column->getDefault();
             $nullable = (!$column->getNotNull());
-            $index = $indexGenerator->getIndex($name);
+            $index    = $indexGenerator->getIndex($name);
+            $unsigned = false;
 
             $decorators = null;
-            $args = null;
+            $args     = null;
 
             if (isset($this->fieldTypeMap[$type])) {
                 $type = $this->fieldTypeMap[$type];
@@ -106,52 +111,53 @@ class FieldGenerator
             // Different rules for different type groups
             if (in_array($type, ['tinyInteger', 'smallInteger', 'integer', 'bigInteger'])) {
                 // Integer
-                if ($type == 'integer' and $column->getUnsigned() and $column->getAutoincrement()) {
+                if ($type == 'integer' && $column->getUnsigned() && $column->getAutoincrement()) {
                     $type = 'increments';
+                    $index = null;
+                } elseif ($type == 'bigInteger' && $column->getUnsigned() && $column->getAutoincrement()) {
+                    $type = 'bigIncrements';
                     $index = null;
                 } else {
                     if ($column->getUnsigned()) {
-                        $decorators[] = 'unsigned';
+                        $unsigned = true;
                     }
                     if ($column->getAutoincrement()) {
-                        $args = 'true';
                         $index = null;
                     }
                 }
-            } elseif ($type == 'dateTime') {
-                if ($name == 'deleted_at' and $nullable) {
-                    $nullable = false;
-                    $type = 'softDeletes';
-                    $name = '';
-                } elseif ($name == 'created_at' and isset($fields['updated_at'])) {
-                    $fields['updated_at'] = ['field' => '', 'type' => 'timestamps'];
-                    continue;
-                } elseif ($name == 'updated_at' and isset($fields['created_at'])) {
-                    $fields['created_at'] = ['field' => '', 'type' => 'timestamps'];
-                    continue;
-                }
+            } elseif (in_array($type, ['dateTime', 'date', 'time', 'timestamp'])) {
+                // do nothing for now
             } elseif (in_array($type, ['decimal', 'float', 'double'])) {
                 // Precision based numbers
                 $args = $this->getPrecision($column->getPrecision(), $column->getScale());
+
                 if ($column->getUnsigned()) {
-                    $decorators[] = 'unsigned';
+                    $unsigned = true;
                 }
             } else {
                 // Probably not a number (string/char)
                 if ($type === 'string' && $column->getFixed()) {
                     $type = 'char';
                 }
+
                 $args = $this->getLength($length);
             }
 
-            if ($nullable) $decorators[] = 'nullable';
-            if ($default !== null) $decorators[] = $this->getDefault($default, $type);
-            if ($index) $decorators[] = $this->decorate($index->type, $index->name);
 
-            $field = ['field' => $name, 'type' => $type];
-            if ($decorators) $field['decorators'] = $decorators;
-            if ($args) $field['args'] = $args;
-            $fields[$name] = $field;
+            $field = [
+                'name'      => $name,
+                'type'      => $type,
+                'arguments' => $args,
+                'options'   => [
+                    'nullable' => $nullable,
+                    'default'  => $default,
+                    'unique'   => ($index && $index->type == 'unique'),
+                    'index'    => ($index && !Str::startsWith($index->name, 'fk')),
+                    'unsigned' => $unsigned
+                ]
+            ];
+
+            $fields[$name] = new Field($field);
         }
 
         return $fields;
@@ -190,15 +196,15 @@ class FieldGenerator
     /**
      * @param int $precision
      * @param int $scale
-     * @return string|void
+     * @return array|void
      */
     protected function getPrecision($precision, $scale)
     {
         if ($precision != 8 or $scale != 2) {
-            $result = $precision;
+            $result = [$precision];
 
             if ($scale != 2) {
-                $result .= ', ' . $scale;
+                $result[] = $scale;
             }
 
             return $result;
@@ -238,26 +244,22 @@ class FieldGenerator
     }
 
     /**
+     * @param array $fields
      * @param IndexGenerator $indexGenerator
      * @return array
      */
-    protected function getMultiFieldIndexes(IndexGenerator $indexGenerator)
+    protected function getMultiFieldIndexes(array $fields, IndexGenerator $indexGenerator)
     {
-        $indexes = array();
-
         foreach ($indexGenerator->getMultiFieldIndexes() as $index) {
-            $indexArray = [
-                'field' => $index->columns,
-                'type' => $index->type,
-            ];
-
-            if ($index->name) {
-                $indexArray['args'] = $this->argsToString($index->name);
+            if ($index->type == 'primary') {
+                foreach ($index->columns as $column) {
+                    if (isset($fields[$column])) {
+                        $fields[$column]->setPrimary(true);
+                    }
+                }
             }
-
-            $indexes[] = $indexArray;
         }
 
-        return $indexes;
+        return $fields;
     }
 }
