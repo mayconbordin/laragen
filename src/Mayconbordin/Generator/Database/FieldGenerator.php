@@ -140,7 +140,7 @@ class FieldGenerator
                     $type = 'char';
                 }
 
-                $args = [$this->getLength($length)];
+                $args = $this->getLength($length);
             }
 
 
@@ -169,8 +169,8 @@ class FieldGenerator
      */
     protected function getLength($length)
     {
-        if ($length and $length !== 255) {
-            return $length;
+        if ($length) {
+            return [$length];
         }
     }
 
