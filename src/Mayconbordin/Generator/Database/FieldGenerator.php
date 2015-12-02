@@ -99,7 +99,7 @@ class FieldGenerator
             $default  = $column->getDefault();
             $nullable = (!$column->getNotNull());
             $index    = $indexGenerator->getIndex($name);
-            $unsigned = false;
+            $unsigned = $column->getUnsigned();
 
             $decorators = null;
             $args     = null;
@@ -111,16 +111,13 @@ class FieldGenerator
             // Different rules for different type groups
             if (in_array($type, ['tinyInteger', 'smallInteger', 'integer', 'bigInteger'])) {
                 // Integer
-                if ($type == 'integer' && $column->getUnsigned() && $column->getAutoincrement()) {
+                if ($type == 'integer' && /*$column->getUnsigned() &&*/ $column->getAutoincrement()) {
                     $type = 'increments';
                     $index = null;
-                } elseif ($type == 'bigInteger' && $column->getUnsigned() && $column->getAutoincrement()) {
+                } elseif ($type == 'bigInteger' && /*$column->getUnsigned() &&*/ $column->getAutoincrement()) {
                     $type = 'bigIncrements';
                     $index = null;
                 } else {
-                    if ($column->getUnsigned()) {
-                        $unsigned = true;
-                    }
                     if ($column->getAutoincrement()) {
                         $index = null;
                     }
@@ -130,10 +127,6 @@ class FieldGenerator
             } elseif (in_array($type, ['decimal', 'float', 'double'])) {
                 // Precision based numbers
                 $args = $this->getPrecision($column->getPrecision(), $column->getScale());
-
-                if ($column->getUnsigned()) {
-                    $unsigned = true;
-                }
             } else {
                 // Probably not a number (string/char)
                 if ($type === 'string' && $column->getFixed()) {
