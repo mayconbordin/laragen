@@ -118,11 +118,11 @@ class MigrationCommand extends Command
         }
 
         foreach ($schema as $table) {
-            $migrationName = $date .'_'. $prefix .'_'. $table->getName() .'_table';
+            $migrationName = $prefix .'_'. $table->getName() .'_table';
 
             $generator = new MigrationGenerator([
                 'name'             => $migrationName,
-                'raw_name'         => true,
+                'raw_name'         => $date .'_'. $migrationName,
                 'action'           => 'create_simple',
                 'force'            => $this->option('force'),
                 'table'            => $table,

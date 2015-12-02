@@ -28,7 +28,7 @@ class MigrationGenerator extends Generator
     protected $onlyForeign;
 
     /**
-     * @var boolean
+     * @var string|null
      */
     protected $rawName;
 
@@ -47,7 +47,7 @@ class MigrationGenerator extends Generator
         $this->table           = $options['table'];
         $this->generateForeign = array_get($options, 'generate_foreign', true);
         $this->onlyForeign     = array_get($options, 'only_foreign', false);
-        $this->rawName         = array_get($options, 'raw_name', false);
+        $this->rawName         = array_get($options, 'raw_name', null);
     }
 
     /**
@@ -67,8 +67,8 @@ class MigrationGenerator extends Generator
      */
     public function getFileName()
     {
-        if ($this->rawName) {
-            return $this->getMigrationName();
+        if ($this->rawName != null) {
+            return strtolower($this->rawName);
         }
 
         return date('Y_m_d_His_').$this->getMigrationName();
