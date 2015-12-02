@@ -166,7 +166,7 @@ class MigrationGenerator extends Generator
             }
         }
 
-        if (($field->hasForeign() && $this->generateForeign) || $this->onlyForeign) {
+        if ($field->hasForeign() && ($this->generateForeign || $this->onlyForeign)) {
             $foreign = $field->getForeign();
             $syntax .= "\n" . str_repeat(' ', 12)
                     . sprintf("\$table->foreign('%s')->references('%s')->on('%s');", $this->getForeignKeyName($field),
