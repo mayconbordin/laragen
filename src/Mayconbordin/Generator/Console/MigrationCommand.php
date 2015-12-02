@@ -119,7 +119,7 @@ class MigrationCommand extends Command
 
         foreach ($schema as $table) {
             if ($method == 'foreign_keys' && !$table->hasForeignKeys()) continue;
-            
+
             $migrationName = $prefix .'_'. $table->getName() .'_table';
 
             $generator = new MigrationGenerator([
