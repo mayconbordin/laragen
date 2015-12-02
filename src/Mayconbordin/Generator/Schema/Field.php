@@ -295,6 +295,7 @@ class Field
     /**
      * @param string $table The table that is being referenced
      * @param string $field The field that is being referenced
+     * @param null|string $name
      */
     public function setForeign($table, $field = 'id', $name = null)
     {

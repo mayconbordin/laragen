@@ -62,4 +62,44 @@ class Table
     {
         $this->fields[] = $field;
     }
+
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function hasField($name) {
+        return isset($this->fields[$name]);
+    }
+
+    /**
+     * @param $name
+     * @return null|Field
+     */
+    public function getField($name)
+    {
+        if ($this->hasField($name)) {
+            return $this->fields[$name];
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if the table is a pivot table or not based on the absence of an 'id' field and the presence of two primary
+     * keys and at least two foreign keys.
+     *
+     * @return bool
+     */
+    public function isPivot()
+    {
+        $numPk = 0;
+        $numFk = 0;
+
+        foreach ($this->fields as $field) {
+            if ($field->isPrimary())  $numPk++;
+            if ($field->hasForeign()) $numFk++;
+        }
+
+        return (!isset($this->fields['id']) && $numPk == 2 && $numFk >= 2);
+    }
 }

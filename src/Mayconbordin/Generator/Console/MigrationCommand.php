@@ -84,10 +84,8 @@ class MigrationCommand extends Command
         $tables = $this->removeExcludedTables($tables);
         $this->info('Generating migrations for: '. implode(', ', $tables));
 
-        foreach ($tables as $table) {
-            $fields = $this->schemaGenerator->getFields($table);
-            print_r($fields);
-        }
+        $schema = $this->schemaGenerator->getSchema($tables);
+        print_r($schema);
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php namespace Mayconbordin\Generator\Database;
 
 use \DB;
+use Mayconbordin\Generator\Schema\Foreign;
+use Mayconbordin\Generator\Schema\Table;
 
 class SchemaGenerator
 {
@@ -55,14 +57,44 @@ class SchemaGenerator
         $this->ignoreForeignKeyNames = $ignoreForeignKeyNames;
     }
 
+    public function getSchema($tables = null)
+    {
+        if ($tables == null) {
+            $tables = $this->getTables();
+        }
+
+        $schema = [];
+
+        foreach ($tables as $tableName) {
+            $fields = $this->getFields($tableName);
+            $table  = new Table($tableName, $fields);
+
+            foreach ($this->getForeignKeyConstraints($tableName) as $fk) {
+                $field = $table->getField($fk['field']);
+
+                if ($field != null) {
+                    $field->setForeign($fk['on'], $fk['references'], $fk['name']);
+                }
+            }
+
+            $schema[] = $table;
+        }
+
+        return $schema;
+    }
+
     /**
-     * @return mixed
+     * @return array
      */
     public function getTables()
     {
         return $this->schema->listTableNames();
     }
 
+    /**
+     * @param $table
+     * @return array|bool
+     */
     public function getFields($table)
     {
         return $this->fieldGenerator->generate($table, $this->schema, $this->database, $this->ignoreIndexNames);

@@ -31,14 +31,14 @@ class FieldGenerator
      * @param string                                      $database
      * @param bool                                        $ignoreIndexNames
      *
-     * @return array|bool
+     * @return array
      */
     public function generate($table, $schema, $database, $ignoreIndexNames)
     {
         $this->database = $database;
         $columns = $schema->listTableColumns($table);
 
-        if (empty($columns)) return false;
+        if (empty($columns)) return [];
 
         $indexGenerator = new IndexGenerator($table, $schema, $ignoreIndexNames);
         $fields = $this->setEnum($this->getFields($columns, $indexGenerator), $table);
@@ -140,7 +140,7 @@ class FieldGenerator
                     $type = 'char';
                 }
 
-                $args = $this->getLength($length);
+                $args = [$this->getLength($length)];
             }
 
 
