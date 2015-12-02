@@ -88,11 +88,11 @@ class MigrationCommand extends Command
 
         $this->info("Setting up Tables and Index Migrations");
         $date = date('Y_m_d_His');
-        $this->generate('create', $schema, $date);
+        $this->generateFromSchema('create', $schema, $date);
 
         $this->info("Setting up Foreign Key Migrations");
         $date = date('Y_m_d_His', strtotime('+1 second'));
-        $this->generate('foreign_keys', $schema, $date);
+        $this->generateFromSchema('foreign_keys', $schema, $date);
 
         $this->info("Finished!");
     }
