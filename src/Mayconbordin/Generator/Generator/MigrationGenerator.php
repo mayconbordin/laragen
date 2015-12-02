@@ -131,14 +131,14 @@ class MigrationGenerator extends Generator
             return $this->$method($field);
         }, $this->table->getFields());
 
+        if ($direction == 'add' && !$this->onlyForeign) {
+            $fields = array_merge($fields, [$this->createPrimaryKeys()]);
+        }
+
         // clean empty fields
         $fields = array_filter($fields, function($field) {
             return !empty($field);
         });
-
-        if ($direction == 'add' && !$this->onlyForeign) {
-            $fields = array_merge($fields, $this->createPrimaryKeys());
-        }
 
         return implode("\n" . str_repeat(' ', 12), $fields);
     }
@@ -223,9 +223,9 @@ class MigrationGenerator extends Generator
         if (sizeof($pks) == 1) {
             return sprintf("\$table->primary(%s);", $pks[0]);
         } elseif (sizeof($pks) > 1) {
-            return sprintf("\$table->primary([%s]);", implode(',', $pks[0]));
+            return sprintf("\$table->primary([%s]);", implode(',', $pks));
         } else {
-            return [];
+            return '';
         }
     }
 
