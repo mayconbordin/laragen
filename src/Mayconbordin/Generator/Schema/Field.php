@@ -83,6 +83,11 @@ class Field
     protected $foreign  = null;
 
     /**
+     * @var bool If the field is a primary key, used only for composite keys.
+     */
+    protected $primary = false;
+
+    /**
      * Field constructor.
      * @param array $segments
      */
@@ -294,6 +299,22 @@ class Field
     public function setForeign($table, $field = 'id', $name = null)
     {
         $this->foreign = new Foreign($table, $field, $name);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPrimary()
+    {
+        return $this->primary;
+    }
+
+    /**
+     * @param boolean $primary
+     */
+    public function setPrimary($primary)
+    {
+        $this->primary = $primary;
     }
 
     /**
