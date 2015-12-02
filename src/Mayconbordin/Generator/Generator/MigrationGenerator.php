@@ -87,6 +87,12 @@ class MigrationGenerator extends Generator
                 'table'  => $this->table->getName(),
                 'fields' => $this->constructSchema(),
             ]);
+        } elseif ($this->action == 'create_simple') {
+            return Stub::createFromPath(__DIR__.'/../Stubs/migration/create_simple.stub', [
+                'class'  => $this->getClass(),
+                'table'  => $this->table->getName(),
+                'fields' => $this->constructSchema(),
+            ]);
         } elseif ($this->action == 'add') {
             return Stub::createFromPath(__DIR__.'/../Stubs/migration/add.stub', [
                 'class'       => $this->getClass(),
