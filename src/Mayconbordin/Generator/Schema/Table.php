@@ -85,6 +85,20 @@ class Table
     }
 
     /**
+     * @return bool
+     */
+    public function hasForeignKeys()
+    {
+        foreach ($this->fields as $field) {
+            if ($field->hasForeign()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Checks if the table is a pivot table or not based on the absence of an 'id' field and the presence of two primary
      * keys and at least two foreign keys.
      *
