@@ -5,7 +5,6 @@ use Illuminate\Foundation\Composer;
 use Mayconbordin\Generator\Database\SchemaGenerator;
 use Mayconbordin\Generator\Exceptions\MethodNotFoundException;
 use Mayconbordin\Generator\Generator\MigrationGenerator;
-use Mayconbordin\Generator\Generator\MigrationSchemaGenerator;
 use Mayconbordin\Generator\Parsers\NameParser;
 use Mayconbordin\Generator\Parsers\SchemaParser;
 use Mayconbordin\Generator\Schema\Table;

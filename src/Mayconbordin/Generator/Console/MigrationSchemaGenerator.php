@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Generator\Generator;
+<?php namespace Mayconbordin\Generator\Console;
 
 
 use Mayconbordin\Generator\Database\SchemaGenerator;
