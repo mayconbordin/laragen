@@ -208,6 +208,8 @@ class MigrationGenerator extends Generator
     }
 
     /**
+     * Generate the primary key(s) for the table.
+     *
      * @return array|string
      */
     private function createPrimaryKeys()
