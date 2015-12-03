@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Generator\Console;
+<?php namespace Mayconbordin\Generator\Console\Helpers;
 
 
 use Mayconbordin\Generator\Database\SchemaGenerator;
@@ -8,13 +8,18 @@ use Mayconbordin\Generator\Parsers\NameParser;
 use Mayconbordin\Generator\Parsers\SchemaParser;
 use Mayconbordin\Generator\Schema\Table;
 
-trait MigrationSchemaGenerator
+trait MigrationTrait
 {
     /**
      * @var SchemaGenerator
      */
     protected $schemaGenerator;
 
+    /**
+     * Generate a migration from the command line arguments.
+     *
+     * @throws \Mayconbordin\Generator\Exceptions\FileAlreadyExistsException
+     */
     protected function generateFromCommand()
     {
         $meta   = (new NameParser())->parse($this->argument('name'));
@@ -33,6 +38,11 @@ trait MigrationSchemaGenerator
         $this->info("Migration {$this->argument('name')} created successfully.");
     }
 
+    /**
+     * Generate migrations from the database.
+     *
+     * @throws MethodNotFoundException
+     */
     protected function generateFromDatabase()
     {
         $this->info('Using connection: '. $this->option( 'connection' ) ."\n");
@@ -43,7 +53,7 @@ trait MigrationSchemaGenerator
         );
 
         if ($this->option('tables')) {
-            $tables = explode( ',', $this->option('tables') );
+            $tables = explode(',', $this->option('tables'));
         } else {
             $tables = $this->schemaGenerator->getTables();
         }
