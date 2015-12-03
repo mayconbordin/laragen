@@ -29,6 +29,7 @@ class ModelCommand extends Command
         $generator = new ModelGenerator([
             'name'     => $this->argument('name'),
             'fillable' => $this->option('fillable'),
+            'fields'   => $this->option('fields'),
             'force'    => $this->option('force'),
         ]);
 
@@ -58,6 +59,7 @@ class ModelCommand extends Command
     {
         return [
             ['fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null],
+            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];
     }

@@ -181,6 +181,19 @@ class Field
     }
 
     /**
+     * @param int $pos
+     * @return mixed
+     */
+    public function getArgument($pos)
+    {
+        if (!isset($this->arguments[$pos])) {
+            return null;
+        }
+
+        return $this->arguments[$pos];
+    }
+
+    /**
      * @param array $arguments
      */
     public function setArguments($arguments)

@@ -3,7 +3,12 @@
 use Illuminate\Database\Eloquent\Model;
 
 class $CLASS$ extends Model {
-
+    $TABLE_NAME$
     protected $fillable = $FILLABLE$;
 
+    public static $rules = [
+$RULES$
+    ];
+
+    $RELATIONS$
 }
