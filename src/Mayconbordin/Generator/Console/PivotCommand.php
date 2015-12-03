@@ -30,7 +30,7 @@ class PivotCommand extends Command
             'table_one' => $this->argument('table_one'),
             'table_two' => $this->argument('table_two'),
             'timestamp' => $this->option('timestamp'),
-            'force' => $this->option('force'),
+            'force'     => $this->option('force'),
         ]);
 
         $generator->run();

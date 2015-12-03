@@ -12,23 +12,13 @@ class PivotGenerator extends Generator
     protected $stub = 'migration/pivot';
 
     /**
-     * Get base path of destination file.
+     * PivotGenerator constructor.
      *
-     * @return string
+     * @param array $options
      */
-    public function getBasePath()
+    public function __construct(array $options = array())
     {
-        return base_path().'/database/migrations/';
-    }
-
-    /**
-     * Get destination path for generated file.
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->getBasePath().$this->getFilename().'.php';
+        parent::__construct('migration', $options);
     }
 
     /**
@@ -96,12 +86,12 @@ class PivotGenerator extends Generator
     public function getReplacements()
     {
         return array_merge(parent::getReplacements(), [
-            'table_one' => $this->table_one,
-            'table_two' => $this->table_two,
-            'column_one' => $this->getColumnOne(),
-            'column_two' => $this->getColumnTwo(),
+            'table_one'   => $this->table_one,
+            'table_two'   => $this->table_two,
+            'column_one'  => $this->getColumnOne(),
+            'column_two'  => $this->getColumnTwo(),
             'table_pivot' => $this->getPivotTableName(),
-            'timestamp' => $this->getTimestampReplacement(),
+            'timestamp'   => $this->getTimestampReplacement(),
         ]);
     }
 
