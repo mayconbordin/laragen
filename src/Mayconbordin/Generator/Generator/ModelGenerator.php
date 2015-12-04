@@ -30,10 +30,9 @@ class ModelGenerator extends Generator
     /**
      * ModelGenerator constructor.
      *
-     * @param array $options [ action=The name of the action being performed;
-     *                         table=The table object with its fields;
-     *                         generate_foreign=If the foreign keys should be generated;
-     *                         only_foreign=If only the foreign keys should be generated ]
+     * @param array $options [ fillable=List of fillable fields, comma separated;
+     *                         fields=List of fields (with its descriptions), comma separated;
+     *                         table_name=The name of the table, if different than the model name ]
      */
     public function __construct(array $options = array())
     {
