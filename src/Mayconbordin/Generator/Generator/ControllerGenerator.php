@@ -81,7 +81,7 @@ class ControllerGenerator extends Generator
     {
         $replacements = parent::getReplacements();
 
-        if ($this->scaffold) {
+        if ($this->scaffold || $this->repository) {
             return array_merge($replacements, $this->scaffolder->toArray());
         }
 
