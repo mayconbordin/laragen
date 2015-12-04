@@ -38,6 +38,11 @@ abstract class Generator
     protected $entity;
 
     /**
+     * @var string
+     */
+    protected $extension = 'php';
+
+    /**
      * Create new instance of this class.
      *
      * @param string $entity
@@ -125,7 +130,7 @@ abstract class Generator
      */
     public function getPath()
     {
-        return $this->getBasePath().'/'.$this->getFileName().'.php';
+        return $this->getBasePath().'/'.$this->getFileName().'.'.$this->extension;
     }
 
     /**
