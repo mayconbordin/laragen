@@ -12,6 +12,30 @@ class ControllerGenerator extends Generator
     protected $stub = 'controller/plain';
 
     /**
+     * @var bool
+     */
+    protected $resource;
+
+    /**
+     * @var bool
+     */
+    protected $scaffold;
+
+    /**
+     * ControllerGenerator constructor.
+     *
+     * @param array $options [ resource=If the controller should use the resource template;
+     *                         scaffold=If the controller should use the scaffold template ]
+     */
+    public function __construct(array $options = [])
+    {
+        parent::__construct('controller', $options);
+
+        $this->resource = array_get($options, 'resource', false);
+        $this->scaffold = array_get($options, 'scaffold', false);
+    }
+
+    /**
      * Configure some data.
      */
     public function setUp()
@@ -39,33 +63,13 @@ class ControllerGenerator extends Generator
     }
 
     /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return app_path().'/Http/Controllers';
-    }
-
-    /**
-     * Get root namespace.
-     *
-     * @return string
-     */
-    public function getRootNamespace()
-    {
-        return $this->getAppNamespace().'Http\\Controllers\\';
-    }
-
-    /**
      * Get template replacements.
      *
      * @return array
      */
     public function getReplacements()
     {
-        $replacements = array_merge(parent::getReplacements(), ['root_namespace' => $this->getAppNamespace()]);
+        $replacements = parent::getReplacements();
 
         if ($this->scaffold) {
             return array_merge($replacements, $this->scaffolder->toArray());

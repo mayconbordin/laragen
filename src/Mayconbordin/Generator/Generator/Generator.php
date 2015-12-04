@@ -185,10 +185,6 @@ abstract class Generator
      */
     public function getRootNamespace()
     {
-        if (Config::has("generator.{$this->entity}.namespace")) {
-            return Config::get("generator.{$this->entity}.namespace");
-        }
-
         return Config::get('generator.root_namespace', $this->getAppNamespace());
     }
 
@@ -203,7 +199,11 @@ abstract class Generator
 
         array_pop($segments);
 
-        $rootNamespace = $this->getRootNamespace();
+        if (Config::has("generator.{$this->entity}.namespace")) {
+            $rootNamespace = Config::get("generator.{$this->entity}.namespace");
+        } else {
+            $rootNamespace = $this->getRootNamespace();
+        }
 
         if ($rootNamespace == false || $rootNamespace == null) {
             return;

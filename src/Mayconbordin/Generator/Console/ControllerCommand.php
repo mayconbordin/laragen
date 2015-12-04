@@ -27,10 +27,10 @@ class ControllerCommand extends Command
     public function fire()
     {
         $generator = new ControllerGenerator([
-            'name' => $this->argument('name'),
+            'name'     => $this->argument('name'),
             'resource' => $this->option('resource'),
             'scaffold' => $this->option('scaffold'),
-            'force' => $this->option('force'),
+            'force'    => $this->option('force'),
         ]);
 
         $generator->run();
