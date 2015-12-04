@@ -2,6 +2,7 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
+use \Config;
 
 class ControllerScaffolder implements Arrayable
 {
@@ -135,6 +136,8 @@ class ControllerScaffolder implements Arrayable
             'studly_plural_entity' => $this->getStudlyPluralEntity(),
             'prefix_dot' => $this->getPrefixDot(),
             'prefix_slash' => $this->getPrefixSlash(),
+            'model_namespace' => Config::get('generator.model.namespace'),
+            'request_namespace' => Config::get('generator.request.namespace')
         ];
     }
 }
