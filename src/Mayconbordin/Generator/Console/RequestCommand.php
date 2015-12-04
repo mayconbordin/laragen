@@ -27,11 +27,12 @@ class RequestCommand extends Command
     public function fire()
     {
         $generator = new RequestGenerator([
-            'name' => $this->argument('name'),
-            'rules' => $this->option('rules'),
-            'auth' => $this->option('auth'),
+            'name'     => $this->argument('name'),
+            'rules'    => $this->option('rules'),
+            'fields'   => $this->option('fields'),
+            'auth'     => $this->option('auth'),
             'scaffold' => $this->option('scaffold'),
-            'force' => $this->option('force'),
+            'force'    => $this->option('force'),
         ]);
 
         $generator->run();
@@ -60,6 +61,7 @@ class RequestCommand extends Command
     {
         return [
             ['rules', 'r', InputOption::VALUE_OPTIONAL, 'The rules.', null],
+            ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields for creating the rules. Separated with comma (,).', null],
             ['scaffold', 's', InputOption::VALUE_NONE, 'Determine whether the request class generated with scaffold.', null],
             ['auth', 'a', InputOption::VALUE_NONE, 'Determine whether the request class needs authorized.', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
