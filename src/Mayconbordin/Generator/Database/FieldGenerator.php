@@ -193,15 +193,15 @@ class FieldGenerator
      */
     protected function getPrecision($precision, $scale)
     {
-        if ($precision != 8 or $scale != 2) {
-            $result = [$precision];
+        //if ($precision != 8 or $scale != 2) {
+        $result = [$precision];
 
-            if ($scale != 2) {
-                $result[] = $scale;
-            }
-
-            return $result;
+        if ($scale != 2) {
+            $result[] = $scale;
         }
+
+        return $result;
+        //}
     }
 
     /**

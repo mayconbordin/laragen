@@ -116,7 +116,7 @@ class Field
         $this->setIndex(array_get($options, 'index', false));
         $this->setDefault(array_get($options, 'default', null));
         $this->setUnsigned(array_get($options, 'unsigned', false));
-        $this->setNullable(array_get($options, 'nullable', true));
+        $this->setNullable(array_get($options, 'nullable', false));
 
         $foreign = array_get($options, 'foreign', null);
 
