@@ -16,6 +16,11 @@ return [
         'path'      => app_path().'/Models'
     ],
 
+    'repository' => [
+        'namespace' => 'App\\Repositories\\',
+        'path'      => app_path().'/Repositories'
+    ],
+
     'controller' => [
         'namespace' => 'App\\Http\\Controllers\\',
         'path' => app_path().'/Http/Controllers'

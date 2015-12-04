@@ -137,7 +137,8 @@ class ControllerScaffolder implements Arrayable
             'prefix_dot' => $this->getPrefixDot(),
             'prefix_slash' => $this->getPrefixSlash(),
             'model_namespace' => Config::get('generator.model.namespace'),
-            'request_namespace' => Config::get('generator.request.namespace')
+            'request_namespace' => Config::get('generator.request.namespace'),
+            'repository_namespace' => Config::get('generator.repository.namespace'),
         ];
     }
 }

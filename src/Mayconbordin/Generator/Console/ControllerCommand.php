@@ -27,10 +27,11 @@ class ControllerCommand extends Command
     public function fire()
     {
         $generator = new ControllerGenerator([
-            'name'     => $this->argument('name'),
-            'resource' => $this->option('resource'),
-            'scaffold' => $this->option('scaffold'),
-            'force'    => $this->option('force'),
+            'name'       => $this->argument('name'),
+            'resource'   => $this->option('resource'),
+            'scaffold'   => $this->option('scaffold'),
+            'repository' => $this->option('repository'),
+            'force'      => $this->option('force'),
         ]);
 
         $generator->run();
@@ -60,6 +61,7 @@ class ControllerCommand extends Command
         return [
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller.', null],
             ['scaffold', 's', InputOption::VALUE_NONE, 'Generate a scaffold controller.', null],
+            ['repository', '', InputOption::VALUE_NONE, 'Generate a repository scaffold controller.', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];
     }
