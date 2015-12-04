@@ -32,7 +32,7 @@ class $CLASS$ extends Controller
 	 */
 	public function index()
 	{
-		$$LOWER_ENTITIES$ = $STUDLY_ENTITY$Repository->paginate();
+		$$LOWER_ENTITIES$ = $this->$LOWER_SINGULAR_ENTITY$Repository->paginate();
 		return view('$PREFIX_DOT$$LOWER_ENTITIES$.index', ['$LOWER_ENTITIES$' => $$LOWER_ENTITIES$]);
 	}
 
@@ -54,7 +54,7 @@ class $CLASS$ extends Controller
 	public function store(Create$STUDLY_ENTITY$Request $request)
 	{
 	    try {
-		    $$LOWER_SINGULAR_ENTITY$ = $STUDLY_ENTITY$Repository->create($request->all());
+		    $$LOWER_SINGULAR_ENTITY$ = $this->$LOWER_SINGULAR_ENTITY$Repository->create($request->all());
 		    return redirect()->route('$PREFIX_DOT$$LOWER_ENTITIES$.index')
 		                     ->with('success', Lang::get('$LOWER_SINGULAR_ENTITY$.created'));
 		} catch (NotFoundError $e) {
@@ -95,7 +95,7 @@ class $CLASS$ extends Controller
 	public function edit($id)
 	{
 	    try {
-		    $$LOWER_SINGULAR_ENTITY$ = $STUDLY_ENTITY$Repository->find($id);
+		    $$LOWER_SINGULAR_ENTITY$ = $this->$LOWER_SINGULAR_ENTITY$Repository->find($id);
 		    return view('$PREFIX_DOT$$LOWER_ENTITIES$.edit', ['$LOWER_SINGULAR_ENTITY$' => $$LOWER_SINGULAR_ENTITY$]);
 		} catch (NotFoundError $e) {
             return redirect()->route('$PREFIX_DOT$$LOWER_ENTITIES$.index')
@@ -112,7 +112,7 @@ class $CLASS$ extends Controller
 	public function update(Update$STUDLY_ENTITY$Request $request, $id)
 	{
 	    try {
-		    $STUDLY_ENTITY$Repository->update($request->all(), $id);
+		    $this->$LOWER_SINGULAR_ENTITY$Repository->update($request->all(), $id);
 		    return redirect()->route('$PREFIX_DOT$$LOWER_ENTITIES$.edit', [$id])
 		                     ->with('success', Lang::get('$LOWER_SINGULAR_ENTITY$.updated'));
         } catch (NotFoundError $e) {
@@ -136,7 +136,7 @@ class $CLASS$ extends Controller
 	public function destroy($id)
 	{
 	    try {
-		    $STUDLY_ENTITY$Repository->delete($id);
+		    $this->$LOWER_SINGULAR_ENTITY$Repository->delete($id);
 		    return redirect()->route('$PREFIX_DOT$$LOWER_ENTITIES$.index')
 		                     ->with('success', Lang::get('$LOWER_SINGULAR_ENTITY$.deleted'));
 		} catch (NotFoundError $e) {
