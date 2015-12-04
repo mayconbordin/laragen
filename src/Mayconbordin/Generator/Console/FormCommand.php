@@ -35,7 +35,6 @@ class FormCommand extends Command
         if ($this->option('output') == 'console') {
             $this->line($generator->render());
         } else {
-            
             if (!$this->argument('table')) {
                 throw new \RuntimeException("The table argument is required");
             }

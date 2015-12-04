@@ -13,6 +13,23 @@ class FormGenerator extends Generator
     protected $stub = 'form';
 
     /**
+     * @var string
+     */
+    protected $fields;
+
+    /**
+     * FormGenerator constructor.
+     *
+     * @param array $options [ fields=The form fields ]
+     */
+    public function __construct(array $options = [])
+    {
+        parent::__construct('view', $options);
+
+        $this->fields = array_get($options, 'fields', null);
+    }
+
+    /**
      * Render the form.
      *
      * @return string
@@ -45,28 +62,15 @@ class FormGenerator extends Generator
     {
         return (new FieldsDumper($this->fields))->render();
     }
-    
-    
-    
-    
-    /**
-     * Get base path of destination file.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return base_path().'/resources/views/';
-    }
 
     /**
      * Get destination path for generated file.
      *
      * @return string
      */
-    public function getPath()
+    public function getFileName()
     {
-        return $this->getBasePath().strtolower($this->getName()).'.blade.php';
+        return strtolower($this->getName()).'.blade';
     }
     
     /**

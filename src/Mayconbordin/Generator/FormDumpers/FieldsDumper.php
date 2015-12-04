@@ -1,7 +1,7 @@
 <?php namespace Mayconbordin\Generator\FormDumpers;
 
-use Mayconbordin\Generator\Migrations\SchemaParser;
 use Mayconbordin\Generator\Generator\Stub;
+use Mayconbordin\Generator\Parsers\SchemaParser;
 
 class FieldsDumper
 {
@@ -25,16 +25,6 @@ class FieldsDumper
     }
 
     /**
-     * Get schema parser.
-     *
-     * @return string
-     */
-    public function getParser()
-    {
-        return new SchemaParser($this->fields);
-    }
-
-    /**
      * Render the form.
      *
      * @return string
@@ -43,8 +33,8 @@ class FieldsDumper
     {
         $results = '';
 
-        foreach ($this->getParser()->toArray() as $name => $types) {
-            $results .= $this->getStub($this->getFieldType($types), $name).PHP_EOL;
+        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+            $results .= $this->getStub($field->getType(), $field->getName()).PHP_EOL;
         }
 
         return $results;
@@ -59,12 +49,12 @@ class FieldsDumper
     {
         $results = '';
 
-        foreach ($this->getParser()->toArray() as $name => $types) {
-            if (in_array($name, $this->ignores)) {
+        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+            if (in_array($field->getName(), $this->ignores)) {
                 continue;
             }
 
-            $results .= "\t\t\t".'<th>'.ucwords($name).'</th>'.PHP_EOL;
+            $results .= "\t\t\t".'<th>'.ucwords($field->getName()).'</th>'.PHP_EOL;
         }
 
         return $results;
@@ -81,12 +71,12 @@ class FieldsDumper
     {
         $results = '';
 
-        foreach ($this->getParser()->toArray() as $name => $types) {
-            if (in_array($name, $this->ignores)) {
+        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+            if (in_array($field->getName(), $this->ignores)) {
                 continue;
             }
 
-            $results .= "\t\t\t\t\t".'<td>{!! $'.$var.'->'.$name.' !!}</td>'.PHP_EOL;
+            $results .= "\t\t\t\t\t".'<td>{!! $'.$var.'->'.$field->getName().' !!}</td>'.PHP_EOL;
         }
 
         return $results;
@@ -103,14 +93,14 @@ class FieldsDumper
     {
         $results = PHP_EOL;
 
-        foreach ($this->getParser()->toArray() as $name => $types) {
-            if (in_array($name, $this->ignores)) {
+        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+            if (in_array($field->getName(), $this->ignores)) {
                 continue;
             }
 
             $results .= Stub::createFromPath(__DIR__.'/../Stubs/scaffold/row.stub', [
-                'label' => ucwords($name),
-                'column' => $name,
+                'label' => ucwords($field->getName()),
+                'column' => $field->getName(),
                 'var' => $var,
             ])->render();
         }
