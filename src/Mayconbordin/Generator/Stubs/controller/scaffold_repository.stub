@@ -78,7 +78,7 @@ class $CLASS$ extends Controller
 	public function show($id)
 	{
 	    try {
-		    $$LOWER_SINGULAR_ENTITY$ = $STUDLY_ENTITY$Repository->find($id);
+		    $$LOWER_SINGULAR_ENTITY$ = $this->$LOWER_SINGULAR_ENTITY$Repository->find($id);
 		    return view('$PREFIX_DOT$$LOWER_ENTITIES$.show', ['$LOWER_SINGULAR_ENTITY$' => $$LOWER_SINGULAR_ENTITY$]);
 		} catch (NotFoundError $e) {
             return redirect()->route('$PREFIX_DOT$$LOWER_ENTITIES$.index')
