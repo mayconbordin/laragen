@@ -95,7 +95,7 @@ class RequestGenerator extends Generator
         } else {
             foreach ((new SchemaParser())->parse($this->fields) as $field) {
                 $rules = FieldValidationHelper::toRules($field, $this->tableName);
-                $results .= $this->createRules($field, $rules);
+                $results .= $this->createRules($field->getName(), $rules);
             }
         }
 
