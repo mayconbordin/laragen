@@ -1,6 +1,7 @@
 <?php namespace Mayconbordin\Generator\Generator;
 
-use Mayconbordin\Generator\Migrations\SchemaParser;
+use Mayconbordin\Generator\Helpers\FieldValidationHelper;
+use Mayconbordin\Generator\Parsers\SchemaParser;
 
 class RequestGenerator extends Generator
 {
@@ -12,33 +13,41 @@ class RequestGenerator extends Generator
     protected $stub = 'request';
 
     /**
-     * Get base path of destination file.
-     *
-     * @return string
+     * @var bool
      */
-    public function getBasePath()
-    {
-        return app_path().'/Http/Requests/';
-    }
+    protected $auth;
 
     /**
-     * Get destination path for generated file.
-     *
-     * @return string
+     * @var string
      */
-    public function getPath()
-    {
-        return $this->getBasePath().$this->getName().'.php';
-    }
+    protected $rules;
 
     /**
-     * Get root namespace.
-     *
-     * @return string
+     * @var string
      */
-    public function getRootNamespace()
+    protected $fields;
+
+    /**
+     * @var string
+     */
+    protected $tableName;
+
+    /**
+     * RequestGenerator constructor.
+     *
+     * @param array $options [ auth=If the user is authorized to make the request (Default: true);
+     *                         rules=List of comma-separated fields and rules;
+     *                         fields=List of fields (with its descriptions), comma separated;
+     *                         table_name=The name of the table, if different than the model name ]
+     */
+    public function __construct(array $options = [])
     {
-        return $this->getAppNamespace().'Http\Requests\\';
+        parent::__construct('request', $options);
+
+        $this->auth      = array_get($options, 'auth', false);
+        $this->rules     = array_get($options, 'rules', null);
+        $this->fields    = array_get($options, 'fields', null);
+        $this->tableName = array_get($options, 'table_name', null);
     }
 
     /**
@@ -49,7 +58,7 @@ class RequestGenerator extends Generator
     public function getReplacements()
     {
         return array_merge(parent::getReplacements(), [
-            'auth' => $this->getAuth(),
+            'auth'  => $this->getAuth(),
             'rules' => $this->getRules(),
         ]);
     }
@@ -73,16 +82,21 @@ class RequestGenerator extends Generator
      */
     public function getRules()
     {
-        if (!$this->rules) {
+        if (empty($this->rules) && empty($this->fields)) {
             return 'return [];';
         }
 
-        $parser = new SchemaParser($this->rules);
-
         $results = 'return ['.PHP_EOL;
 
-        foreach ($parser->toArray() as $field => $rules) {
-            $results .= $this->createRules($field, $rules);
+        if (!empty($this->rules)) {
+            foreach ((new SchemaParser())->parseRules($this->rules) as $field => $rules) {
+                $results .= $this->createRules($field, $rules);
+            }
+        } else {
+            foreach ((new SchemaParser())->parse($this->fields) as $field) {
+                $rules = FieldValidationHelper::toRules($field, $this->tableName);
+                $results .= $this->createRules($field, $rules);
+            }
         }
 
         $results .= "\t\t];";
@@ -100,12 +114,7 @@ class RequestGenerator extends Generator
      */
     protected function createRules($field, $rules)
     {
-        $rule = str_replace(['(', ')', ';'], [':', '', ','], implode('|', $rules));
-
-        if ($this->scaffold) {
-            $rule = 'required';
-        }
-
+        $rule = implode('|', $rules);
         return "\t\t\t'{$field}' => '".$rule."',".PHP_EOL;
     }
 }

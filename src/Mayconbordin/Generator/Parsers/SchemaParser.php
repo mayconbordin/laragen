@@ -1,5 +1,6 @@
 <?php namespace Mayconbordin\Generator\Parsers;
 
+use Mayconbordin\Generator\Exceptions\InvalidFormatException;
 use Mayconbordin\Generator\Schema\Field;
 
 class SchemaParser
@@ -35,6 +36,35 @@ class SchemaParser
             }
 
             $this->addField(new Field($segments));
+        }
+
+        return $this->schema;
+    }
+
+    /**
+     * Parse the command line validation rules.
+     * Ex: name:string|max(255)|required, age:integer|required, email:unique(users;email_address)|required
+     *
+     * @param string $rules
+     * @return array
+     * @throws InvalidFormatException
+     */
+    public function parseRules($rules)
+    {
+        if (empty($rules)) return [];
+
+        $fields = $this->splitIntoFields($rules);
+
+        foreach ($fields as $field) {
+            $segments = explode(':', $field);
+
+            if (sizeof($segments) != 2) {
+                throw new InvalidFormatException("Rules should follow the format <fieldname>:<rule1>|<rule2>, ...");
+            }
+
+            $rules = explode('|', str_replace(['(', ')', ';'], [':', '', ','], $segments[1]));
+
+            $this->schema[$segments[0]] = $rules;
         }
 
         return $this->schema;
