@@ -28,9 +28,9 @@ class SeedCommand extends Command
     public function fire(Composer $composer)
     {
         $generator = new SeedGenerator([
-            'name' => $this->argument('name'),
+            'name'   => $this->argument('name'),
             'master' => $this->option('master'),
-            'force' => $this->option('force'),
+            'force'  => $this->option('force'),
         ]);
 
         $generator->run();

@@ -10,23 +10,20 @@ class SeedGenerator extends Generator
     protected $stub = 'seed';
 
     /**
-     * Get base path of destination file.
-     *
-     * @return string
+     * @var bool
      */
-    public function getBasePath()
-    {
-        return base_path().'/database/seeds/';
-    }
+    protected $master;
 
     /**
-     * Get destination path for generated file.
+     * SeedGenerator constructor.
      *
-     * @return string
+     * @param array $options [ master=Create a master seed ]
      */
-    public function getPath()
+    public function __construct(array $options = array())
     {
-        return $this->getBasePath().$this->getName().'.php';
+        parent::__construct('seed', $options);
+
+        $this->master = array_get($options, 'master', false);
     }
 
     /**
@@ -38,18 +35,10 @@ class SeedGenerator extends Generator
     {
         $name = parent::getName();
 
-        $suffix = $this->master ? 'DatabaseSeeder' : 'TableSeeder';
+        if ($this->master) {
+            return $name.'DatabaseSeeder';
+        }
 
-        return $name.$suffix;
-    }
-
-    /**
-     * Get root namespace.
-     *
-     * @return string
-     */
-    public function getRootNamespace()
-    {
-        return false;
+        return $name.'TableSeeder';
     }
 }
