@@ -116,4 +116,20 @@ class Table
 
         return (!isset($this->fields['id']) && $numPk == 2 && $numFk >= 2);
     }
+
+    /**
+     * Serialize all fields into a string of comma-separated field name and details.
+     * 
+     * @return string
+     */
+    public function serializeFields()
+    {
+        $fields = [];
+
+        foreach ($this->fields as $field) {
+            $fields[] = $field->serialize();
+        }
+
+        return implode(', ', $fields);
+    }
 }

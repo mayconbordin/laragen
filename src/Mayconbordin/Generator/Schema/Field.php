@@ -331,10 +331,28 @@ class Field
         $this->primary = $primary;
     }
 
+    public function serialize()
+    {
+        $str = $this->name.':'.$this->type;
+
+        if (sizeof($this->arguments) > 0) {
+            $str .= '(' . implode(', ', $this->arguments) . ')';
+        }
+
+        if ($this->default)  $str .= ':default('.$this->default.')';
+        if ($this->unique)   $str .= ':unique';
+        if ($this->index)    $str .= ':index';
+        if ($this->nullable) $str .= ':nullable';
+        if ($this->unsigned) $str .= ':unsigned';
+        if ($this->foreign)  $str .= ':foreign';
+
+        return $str;
+    }
+
     /**
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         return 'Field {name='.$this->name.', type='.$this->type
                . ((sizeof($this->arguments) > 0) ? '(' . implode(', ', $this->arguments) . ')' : '')

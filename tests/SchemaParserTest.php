@@ -1,15 +1,16 @@
 <?php namespace Mayconbordin\Generator\Tests;
 
-use Mayconbordin\Generator\Migrations\SchemaParser;
+
+use Mayconbordin\Generator\Parsers\SchemaParser;
 
 class SchemaParserTest extends TestCase
 {
     public function testParse()
     {
-        $parser = new SchemaParser;
+        $parser = new SchemaParser();
         
         $schema = "username:string, email:string:unique:index, test:string:default(hello),"
-                . "user_type_id:integer:unsigned:nullable:foreign";
+                . "user_type_id:integer:unsigned:nullable:foreign, value:decimal(10,2)";
         $result = $parser->parse($schema);
 
         $this->assertEquals("username", $result[0]->getName());
@@ -29,7 +30,7 @@ class SchemaParserTest extends TestCase
         $this->assertEquals(true, $result[3]->isNullable());
 
         $foreign =  $result[3]->getForeign();
-        $this->assertEquals("id", $foreign['references']);
-        $this->assertEquals("user_types", $foreign['on']);
+        $this->assertEquals("id", $foreign->getReferences());
+        $this->assertEquals("user_types", $foreign->getOn());
     }
 }
