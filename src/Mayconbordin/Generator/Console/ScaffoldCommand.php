@@ -32,7 +32,7 @@ class ScaffoldCommand extends Command
     {
         $schema = [];
 
-        if ($this->argument('entity')) {
+        if ($this->argument('name')) {
             $schema[] = $this->fetchTableFromCli();
         } else {
             $this->info('Using connection: '. $this->option('connection') ."\n");
@@ -51,7 +51,7 @@ class ScaffoldCommand extends Command
     public function getArguments()
     {
         return [
-            ['entity', InputArgument::OPTIONAL, 'The entity name.', null],
+            ['name', InputArgument::OPTIONAL, 'The entity name.', null],
         ];
     }
 
