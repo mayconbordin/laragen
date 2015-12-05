@@ -12,11 +12,6 @@ class RepositoryGenerator extends Generator
     protected $stub = 'repository';
 
     /**
-     * @var string
-     */
-    protected $entity;
-
-    /**
      * ModelGenerator constructor.
      *
      * @param array $options
@@ -24,8 +19,6 @@ class RepositoryGenerator extends Generator
     public function __construct(array $options = array())
     {
         parent::__construct('repository', $options);
-
-        $this->entity = array_get($options, 'entity', null);
     }
 
     /**
@@ -35,6 +28,6 @@ class RepositoryGenerator extends Generator
      */
     public function getReplacements()
     {
-        return array_merge(parent::getReplacements(), (new ParameterScaffolder($this->getName(), null, 'repository', $this->entity))->toArray());
+        return array_merge(parent::getReplacements(), (new ParameterScaffolder($this->getName(), null, 'repository'))->toArray());
     }
 }

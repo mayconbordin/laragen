@@ -109,17 +109,6 @@ class ScaffoldGenerator
     }
 
     /**
-     * Get model name for the table.
-     *
-     * @param Table $table
-     * @return string
-     */
-    public function getModelName(Table $table)
-    {
-        return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $table->getName()))));
-    }
-
-    /**
      * Get all the tables in the schema.
      *
      * @return array
@@ -249,7 +238,6 @@ class ScaffoldGenerator
         foreach ($this->getMainTables() as $table) {
             $this->console->call('generate:controller', [
                 'name'         => $this->getControllerName($table),
-                '--entity'     => $this->getModelName($table),
                 '--force'      => $this->console->option('force'),
                 '--repository' => $this->console->option('repository'),
                 '--scaffold'   => !$this->console->option('repository'),
@@ -268,9 +256,8 @@ class ScaffoldGenerator
 
         foreach ($this->getMainTables() as $table) {
             $this->console->call('generate:repository', [
-                'name'     => $this->getRepositoryName($table),
-                '--entity' => $this->getModelName($table),
-                '--force'  => $this->console->option('force')
+                'name'    => $this->getRepositoryName($table),
+                '--force' => $this->console->option('force')
             ]);
         }
     }

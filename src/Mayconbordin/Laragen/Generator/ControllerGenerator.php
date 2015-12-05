@@ -27,17 +27,11 @@ class ControllerGenerator extends Generator
     protected $repository;
 
     /**
-     * @var string
-     */
-    protected $entity;
-
-    /**
      * ControllerGenerator constructor.
      *
      * @param array $options [ resource=If the controller should use the resource template;
      *                         scaffold=If the controller should use the scaffold template;
-     *                         repository=If the controller should use the repository scaffold template
-     *                         entity=The name of the entity to be referenced ]
+     *                         repository=If the controller should use the repository scaffold template ]
      */
     public function __construct(array $options = [])
     {
@@ -46,7 +40,6 @@ class ControllerGenerator extends Generator
         $this->resource   = array_get($options, 'resource', false);
         $this->scaffold   = array_get($options, 'scaffold', false);
         $this->repository = array_get($options, 'repository', false);
-        $this->entity     = array_get($options, 'entity', null);
     }
 
     /**
@@ -58,10 +51,10 @@ class ControllerGenerator extends Generator
             $this->stub = 'controller/resource';
         } elseif ($this->scaffold) {
             $this->stub = 'controller/scaffold';
-            $this->scaffolder = new ParameterScaffolder($this->getClass(), $this->getPrefix(), 'controller', $this->entity);
+            $this->scaffolder = new ParameterScaffolder($this->getClass(), $this->getPrefix());
         } elseif ($this->repository) {
             $this->stub = 'controller/scaffold_repository';
-            $this->scaffolder = new ParameterScaffolder($this->getClass(), $this->getPrefix(), 'controller', $this->entity);
+            $this->scaffolder = new ParameterScaffolder($this->getClass(), $this->getPrefix());
         }
     }
 
