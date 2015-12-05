@@ -28,7 +28,7 @@ class RepositoryCommand extends Command
     {
         $generator = new RepositoryGenerator([
             'name'     => $this->argument('name'),
-            'entity'   => $this->argument('entity'),
+            'entity'   => $this->option('entity'),
             'force'    => $this->option('force'),
         ]);
 
