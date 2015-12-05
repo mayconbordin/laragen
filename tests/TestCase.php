@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Generator\Tests;
+<?php namespace Mayconbordin\Laragen\Tests;
 
 use Illuminate\Database\Capsule\Manager as DB;
 

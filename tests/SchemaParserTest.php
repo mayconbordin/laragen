@@ -1,7 +1,7 @@
-<?php namespace Mayconbordin\Generator\Tests;
+<?php namespace Mayconbordin\Laragen\Tests;
 
 
-use Mayconbordin\Generator\Parsers\SchemaParser;
+use Mayconbordin\Laragen\Parsers\SchemaParser;
 
 class SchemaParserTest extends TestCase
 {
