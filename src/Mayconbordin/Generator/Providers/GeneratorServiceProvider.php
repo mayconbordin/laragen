@@ -20,6 +20,7 @@ class GeneratorServiceProvider extends ServiceProvider
         'Pivot',
         'Scaffold',
         'Form',
+        'Repository'
     ];
     
     /**
