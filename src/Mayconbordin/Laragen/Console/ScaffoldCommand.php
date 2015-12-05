@@ -41,6 +41,8 @@ class ScaffoldCommand extends Command
 
         $generator = new ScaffoldGenerator($this, $schema);
         $generator->run();
+
+        $this->info("All done.");
     }
 
     /**
