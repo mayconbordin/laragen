@@ -216,12 +216,12 @@ class ScaffoldGenerator
             }
         } else {
             $this->console->call('generate:migration', [
-                '--connection'        => $this->console->option('connection'),
-                '--tables'            => $this->console->option('tables'),
-                '--ignore'            => $this->console->option('ignore'),
-                '--defaultIndexNames' => $this->console->option('defaultIndexNames'),
-                '--defaultFKNames'    => $this->console->option('defaultFKNames'),
-                '--force'             => $this->console->option('force'),
+                '--connection'          => $this->console->option('connection'),
+                '--tables'              => $this->console->option('tables'),
+                '--ignore'              => $this->console->option('ignore'),
+                '--default-index-names' => $this->console->option('default-index-names'),
+                '--default-fk-names'    => $this->console->option('default-fk-names'),
+                '--force'               => $this->console->option('force'),
             ]);
         }
     }
