@@ -119,7 +119,7 @@ class Table
 
     /**
      * Serialize all fields into a string of comma-separated field name and details.
-     * 
+     *
      * @return string
      */
     public function serializeFields()

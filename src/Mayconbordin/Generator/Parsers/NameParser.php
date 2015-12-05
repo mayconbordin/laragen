@@ -2,6 +2,13 @@
 
 class NameParser
 {
+    const ACTIONS = [
+        'create' => 'create', 'make'    => 'create',
+        'delete' => 'delete', 'remove'  => 'delete',
+        'drop'   => 'drop'  , 'destroy' => 'drop'  ,
+        'add'    => 'add'   , 'append'  => 'add'   , 'update' => 'add', 'insert' => 'add',
+    ];
+
     /**
      * Parse the migration name into something we can use.
      *
@@ -51,7 +58,11 @@ class NameParser
      */
     private function getAction(&$segments)
     {
-        return $this->normalizeActionName(array_pop($segments));
+        if ($this->normalizeActionName(array_last($segments)) != null) {
+            return $this->normalizeActionName(array_pop($segments));
+        }
+
+        return null;
     }
 
     /**
@@ -63,26 +74,7 @@ class NameParser
      */
     private function normalizeActionName($action)
     {
-        switch ($action) {
-            case 'create':
-            case 'make':
-                return 'create';
-            case 'delete':
-            case 'remove':
-                return 'delete';
-            case 'destroy':
-                return 'drop';
-            case 'drop':
-            case 'add':
-            case 'append':
-                return 'add';
-            case 'update':
-                return 'add';
-            case 'insert':
-                return 'add';
-            default:
-                return $action;
-        }
+        return array_get(self::ACTIONS, $action, null);
     }
 
     /**
