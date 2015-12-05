@@ -23,9 +23,9 @@ class FieldsDumper
     {
         if (is_array($fields)) {
             $this->fields = $fields;
+        } else {
+            $this->fields = (new SchemaParser())->parse($fields);
         }
-
-        $this->fields = (new SchemaParser())->parse($fields);
     }
 
     /**
