@@ -193,7 +193,15 @@ class ScaffoldGenerator
             return;
         }
 
-        if ($this->console->option('connection')) {
+        if ($this->console->argument('name')) {
+            foreach ($this->getAllTables() as $table) {
+                $this->console->call('generate:migration', [
+                    'name'     => "create_{$this->getEntities($table)}_table",
+                    '--fields' => $table->serializeFields(),
+                    '--force'  => $this->console->option('force'),
+                ]);
+            }
+        } else {
             $this->console->call('generate:migration', [
                 '--connection'        => $this->console->option('connection'),
                 '--tables'            => $this->console->option('tables'),
@@ -202,14 +210,6 @@ class ScaffoldGenerator
                 '--defaultFKNames'    => $this->console->option('defaultFKNames'),
                 '--force'             => $this->console->option('force'),
             ]);
-        } else {
-            foreach ($this->getAllTables() as $table) {
-                $this->console->call('generate:migration', [
-                    'name'     => "create_{$this->getEntities($table)}_table",
-                    '--fields' => $table->serializeFields(),
-                    '--force'  => $this->console->option('force'),
-                ]);
-            }
         }
     }
 
