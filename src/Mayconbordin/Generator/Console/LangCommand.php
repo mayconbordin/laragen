@@ -32,7 +32,8 @@ class LangCommand extends Command
             $generator = new LangGenerator([
                 'name'         => $this->argument('name'),
                 'language'     => $language,
-                'translations' => $this->option('translations')
+                'translations' => $this->option('translations'),
+                'force'        => $this->option('force'),
             ]);
 
             $generator->run();
@@ -63,6 +64,7 @@ class LangCommand extends Command
         return [
             ['languages', 'l', InputOption::VALUE_OPTIONAL, 'The list of languages (comma-separated) in which the resource will be created. Default: en.', 'en'],
             ['translations', 't', InputOption::VALUE_OPTIONAL, 'List of translations to be included in the resource file.', null],
+            ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];
     }
 }
