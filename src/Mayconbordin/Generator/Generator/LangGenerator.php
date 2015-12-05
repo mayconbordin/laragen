@@ -45,7 +45,7 @@ class LangGenerator extends Generator
      */
     public function getFileName()
     {
-        return strtolower($this->language).'/'.strtolower($this->getName());
+        return $this->language.'/'.strtolower($this->getName());
     }
 
     /**
