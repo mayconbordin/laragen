@@ -72,6 +72,8 @@ class ScaffoldCommand extends Command
             ['defaultIndexNames', null, InputOption::VALUE_NONE, 'Don\'t use db index names for migrations'],
             ['defaultFKNames', null, InputOption::VALUE_NONE, 'Don\'t use db foreign key names for migrations'],
 
+            ['languages', 'l', InputOption::VALUE_OPTIONAL, 'The list of languages (comma-separated) in which the resource will be created. Default: en.', 'en'],
+
             ['no-question', null, InputOption::VALUE_NONE, 'Don\'t ask any question.', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
             ['repository', null, InputOption::VALUE_NONE, 'Generate the repository classes and controllers that use the repositories.', null],

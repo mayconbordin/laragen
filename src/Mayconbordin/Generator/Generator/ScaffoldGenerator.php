@@ -464,6 +464,50 @@ class ScaffoldGenerator
     }
 
     /**
+     * Get a serialized string of language translations.
+     *
+     * @param Table $table
+     * @return string
+     */
+    public function getLangTranslations(Table $table)
+    {
+        $translations = [
+            'title'   => Str::studly($this->getEntity($table)).'|'.Str::studly($this->getEntities($table)),
+            'created' => Str::studly($this->getEntity($table)).' created successfully',
+            'updated' => Str::studly($this->getEntity($table)).' updated successfully',
+            'deleted' => Str::studly($this->getEntity($table)).' deleted successfully',
+        ];
+
+        $result = "\"";
+
+        foreach ($translations as $key => $value) {
+            $result .= "$key='$value', ";
+        }
+
+        $result .= "\"";
+
+        return $result;
+    }
+
+    /**
+     * Generate request classes.
+     */
+    public function generateLangResources()
+    {
+        if (!$this->confirm('Do you want to create the language resource files?')) {
+            return;
+        }
+
+        foreach ($this->getMainTables() as $table) {
+            $this->console->call('generate:lang', [
+                'name'           => $this->getEntity($table),
+                '--languages'    => $this->console->option('languages'),
+                '--translations' => $this->getLangTranslations($table)
+            ]);
+        }
+    }
+
+    /**
      * Run the generator.
      */
     public function run()
