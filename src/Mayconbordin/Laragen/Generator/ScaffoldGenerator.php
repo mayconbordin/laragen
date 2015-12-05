@@ -502,7 +502,8 @@ class ScaffoldGenerator
             $this->console->call('generate:lang', [
                 'name'           => $this->getEntity($table),
                 '--languages'    => $this->console->option('languages'),
-                '--translations' => $this->getLangTranslations($table)
+                '--translations' => $this->getLangTranslations($table),
+                '--force'        => $this->console->option('force')
             ]);
         }
     }
