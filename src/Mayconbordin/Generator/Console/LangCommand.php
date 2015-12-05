@@ -63,7 +63,7 @@ class LangCommand extends Command
     {
         return [
             ['languages', 'l', InputOption::VALUE_OPTIONAL, 'The list of languages (comma-separated) in which the resource will be created. Default: en.', 'en'],
-            ['translations', 't', InputOption::VALUE_OPTIONAL, 'List of translations to be included in the resource file.', null],
+            ['translations', 't', InputOption::VALUE_OPTIONAL, 'List of translations to be included in the resource file. Example: "test1=\'test one\', test2=\'teste two\'"', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];
     }
