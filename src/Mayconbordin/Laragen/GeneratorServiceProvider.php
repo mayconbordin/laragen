@@ -31,11 +31,11 @@ class GeneratorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../../../resources/config/generator.php' => config_path('generator.php')
+            __DIR__ . '/../../resources/config/generator.php' => config_path('generator.php')
         ]);
         
         $this->mergeConfigFrom(
-            __DIR__ . '/../../../resources/config/generator.php', 'generator'
+            __DIR__ . '/../../resources/config/generator.php', 'generator'
         );
         
         //$this->loadTranslationsFrom(__DIR__ . '/../../../resources/lang', 'repository');
