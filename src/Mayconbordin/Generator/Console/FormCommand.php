@@ -40,7 +40,7 @@ class FormCommand extends Command
             }
         
             $generator->run();
-            $this->info('Form created successfully.');
+            $this->info("Form {$generator->getClass()} created successfully.");
         }
     }
 

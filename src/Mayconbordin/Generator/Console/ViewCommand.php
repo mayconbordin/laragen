@@ -26,7 +26,7 @@ class ViewCommand extends Command
      */
     public function fire()
     {
-        (new ViewGenerator([
+        $generator = new ViewGenerator([
             'name' => $this->argument('name'),
             'extends' => $this->option('extends'),
             'section' => $this->option('section'),
@@ -35,9 +35,11 @@ class ViewCommand extends Command
             'content' => $this->option('content'),
             'template' => $this->option('template'),
             'force' => $this->option('force'),
-        ]))->run();
+        ]);
 
-        $this->info('View created successfully.');
+        $generator->run();
+
+        $this->info("View {$generator->getName()} created successfully.");
     }
 
     /**

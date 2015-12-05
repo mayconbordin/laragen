@@ -35,7 +35,7 @@ class PivotCommand extends Command
 
         $generator->run();
 
-        $this->info('Migration created successfully.');
+        $this->info("Migration {$generator->getMigrationName()} created successfully.");
     }
 
     /**

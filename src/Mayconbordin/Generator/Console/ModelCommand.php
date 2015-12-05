@@ -35,7 +35,7 @@ class ModelCommand extends Command
 
         $generator->run();
 
-        $this->info('Model created successfully.');
+        $this->info("Model {$generator->getClass()} created successfully.");
     }
 
     /**
