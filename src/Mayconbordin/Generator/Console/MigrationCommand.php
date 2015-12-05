@@ -2,8 +2,9 @@
 
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
-use Mayconbordin\Generator\Console\Helpers\MigrationTrait;
-use Mayconbordin\Generator\Database\SchemaGenerator;
+use Mayconbordin\Generator\Console\Helpers\SchemaFieldsTrait;
+use Mayconbordin\Generator\Exceptions\MethodNotFoundException;
+use Mayconbordin\Generator\Generator\MigrationGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -11,7 +12,7 @@ use \Config;
 
 class MigrationCommand extends Command
 {
-    use MigrationTrait;
+    use SchemaFieldsTrait;
 
     /**
      * The name of command.
@@ -42,6 +43,91 @@ class MigrationCommand extends Command
     }
 
     /**
+     * Generate a migration from the command line arguments.
+     *
+     * @throws \Mayconbordin\Generator\Exceptions\FileAlreadyExistsException
+     */
+    protected function generateFromCommand()
+    {
+        $table = $this->fetchTableFromCli();
+
+        $generator = new MigrationGenerator([
+            'name'   => $this->argument('name'),
+            'action' => $this->fetchActionFromCli(),
+            'force'  => $this->option('force'),
+            'table'  => $table
+        ]);
+
+        $generator->run();
+
+        $this->info("Migration {$this->argument('name')} created successfully.");
+    }
+
+    /**
+     * Generate migrations from the database.
+     *
+     * @throws MethodNotFoundException
+     */
+    protected function generateFromDatabase()
+    {
+        $this->info('Using connection: '. $this->option('connection') ."\n");
+        $schema = $this->fetchSchemaFromDb();
+
+        $this->info("Setting up tables and index migrations.");
+        $date = date('Y_m_d_His');
+        $this->generateFromSchema('create', $schema, $date);
+
+        $this->info("Setting up foreign key migrations.");
+        $date = date('Y_m_d_His', strtotime('+1 second'));
+        $this->generateFromSchema('foreign_keys', $schema, $date);
+
+        $this->info("Finished!");
+    }
+
+    /**
+     * Generate Migrations
+     *
+     * @param string $method Create Tables or Foreign Keys ['create', 'foreign_keys']
+     * @param array $schema The database schema (list of Table objects)
+     * @param string $date The date to be used for generating the migrations
+     *
+     * @throws MethodNotFoundException
+     * @throws \Mayconbordin\Generator\Exceptions\FileAlreadyExistsException
+     */
+    protected function generateFromSchema($method, $schema, $date)
+    {
+        if ($method == 'create') {
+            $prefix = 'create';
+        } elseif ($method = 'foreign_keys') {
+            $prefix = 'add_foreign_keys_to';
+        } else {
+            throw new MethodNotFoundException($method);
+        }
+
+        foreach ($schema as $table) {
+            if ($method == 'foreign_keys' && !$table->hasForeignKeys()) continue;
+
+            $migrationName = $prefix .'_'. $table->getName() .'_table';
+
+            $generator = new MigrationGenerator([
+                'name'             => $migrationName,
+                'raw_name'         => $date .'_'. $migrationName,
+                'action'           => 'create_simple',
+                'force'            => $this->option('force'),
+                'table'            => $table,
+                'generate_foreign' => ($method == 'foreign_keys'),
+                'only_foreign'     => ($method == 'foreign_keys'),
+            ]);
+
+            $generator->run();
+
+            $this->info("Migration $migrationName created successfully.");
+        }
+    }
+
+    // put methods from MigrationTrait here and simplify them with the SchemaFieldsTrait
+
+    /**
      * The array of command arguments.
      *
      * @return array
@@ -62,6 +148,7 @@ class MigrationCommand extends Command
     {
         return [
             ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
+            ['action', null, InputOption::VALUE_OPTIONAL, 'The name of the action: create, create_simple, add, delete or drop.', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
             ['connection', 'c', InputOption::VALUE_OPTIONAL, 'The database connection to use.', Config::get('database.default')],
             ['tables', 't', InputOption::VALUE_OPTIONAL, 'A list of Tables you wish to Generate Migrations for separated by a comma: users,posts,comments'],

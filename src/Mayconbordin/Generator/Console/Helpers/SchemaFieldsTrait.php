@@ -7,7 +7,7 @@ use Mayconbordin\Generator\Parsers\NameParser;
 use Mayconbordin\Generator\Parsers\SchemaParser;
 use Mayconbordin\Generator\Schema\Table;
 
-trait MigrationTrait
+trait SchemaFieldsTrait
 {
     /**
      * @var SchemaGenerator
@@ -19,12 +19,27 @@ trait MigrationTrait
      *
      * @return Table
      */
-    protected function parseTableFromCli()
+    protected function fetchTableFromCli()
     {
         $meta   = (new NameParser())->parse($this->argument('name'));
         $fields = (new SchemaParser())->parse($this->option('fields'));
 
-        return new Table($meta['table'], $fields);
+        return new Table($meta['table'], $fields);;
+    }
+
+    /**
+     * Get the action name from the command line arguments (name or action).
+     *
+     * @return string|null
+     */
+    protected function fetchActionFromCli()
+    {
+        if ($this->option('action')) {
+            return $this->option('action');
+        }
+
+        $meta = (new NameParser())->parse($this->argument('name'));
+        return $meta['action'];
     }
 
     /**
@@ -32,7 +47,7 @@ trait MigrationTrait
      *
      * @throws MethodNotFoundException
      */
-    protected function parseSchemaFromDb()
+    protected function fetchSchemaFromDb()
     {
         $this->schemaGenerator = new SchemaGenerator(
             $this->option('connection'),
