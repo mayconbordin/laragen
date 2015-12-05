@@ -1,12 +1,11 @@
 <?php namespace Mayconbordin\Generator\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 use Mayconbordin\Generator\Console\Helpers\SchemaFieldsTrait;
 use Mayconbordin\Generator\Generator\ScaffoldGenerator;
-use Mayconbordin\Generator\Schema\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use \Config;
 
 class ScaffoldCommand extends Command
 {
@@ -31,7 +30,6 @@ class ScaffoldCommand extends Command
      */
     public function fire()
     {
-        (new ScaffoldGenerator($this))->run();
         $schema = [];
 
         if ($this->argument('entity')) {
@@ -41,7 +39,8 @@ class ScaffoldCommand extends Command
             $schema = $this->fetchSchemaFromDb();
         }
 
-
+        $generator = new ScaffoldGenerator($this, $schema);
+        $generator->run();
     }
 
     /**
