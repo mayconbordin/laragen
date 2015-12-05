@@ -46,4 +46,8 @@ return [
     'seed' => [
         'path' => base_path().'/database/seeds'
     ],
+
+    'lang' => [
+        'path' => base_path().'/resources/lang'
+    ],
 ];
