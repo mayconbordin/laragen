@@ -30,7 +30,7 @@ class LangCommand extends Command
 
         foreach ($languages as $language) {
             $generator = new LangGenerator([
-                'name'         => $this->argument('table'),
+                'name'         => $this->argument('name'),
                 'language'     => $language,
                 'translations' => $this->option('translations')
             ]);
