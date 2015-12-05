@@ -27,10 +27,11 @@ class ModelCommand extends Command
     public function fire()
     {
         $generator = new ModelGenerator([
-            'name'     => $this->argument('name'),
-            'fillable' => $this->option('fillable'),
-            'fields'   => $this->option('fields'),
-            'force'    => $this->option('force'),
+            'name'       => $this->argument('name'),
+            'fillable'   => $this->option('fillable'),
+            'fields'     => $this->option('fields'),
+            'table_name' => $this->option('table-name'),
+            'force'      => $this->option('force'),
         ]);
 
         $generator->run();
@@ -59,6 +60,7 @@ class ModelCommand extends Command
     {
         return [
             ['fillable', null, InputOption::VALUE_OPTIONAL, 'The fillable attributes.', null],
+            ['table-name', null, InputOption::VALUE_OPTIONAL, 'The name of the table.', null],
             ['fields', null, InputOption::VALUE_OPTIONAL, 'The fields of migration. Separated with comma (,).', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];

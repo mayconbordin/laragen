@@ -171,10 +171,11 @@ class ScaffoldGenerator
             $fields = $table->serializeFields();
 
             $this->console->call('generate:model', [
-                'name'       => $this->getEntity($table),
-                '--fillable' => $fields,
-                '--fields'   => $fields,
-                '--force'    => $this->console->option('force'),
+                'name'         => $this->getEntity($table),
+                '--fillable'   => $fields,
+                '--fields'     => $fields,
+                '--table-name' => $table->getName(),
+                '--force'      => $this->console->option('force'),
             ]);
         }
     }
