@@ -28,6 +28,6 @@ class RepositoryGenerator extends Generator
      */
     public function getReplacements()
     {
-        return array_merge(parent::getReplacements(), (new ParameterScaffolder($this->getName()))->toArray(), null, 'repository');
+        return array_merge(parent::getReplacements(), (new ParameterScaffolder($this->getName(), null, 'repository'))->toArray());
     }
 }
