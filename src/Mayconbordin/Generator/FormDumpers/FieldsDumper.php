@@ -17,11 +17,15 @@ class FieldsDumper
     /**
      * The constructor.
      *
-     * @param string $fields
+     * @param string|array $fields
      */
     public function __construct($fields)
     {
-        $this->fields = $fields;
+        if (is_array($fields)) {
+            $this->fields = $fields;
+        }
+
+        $this->fields = (new SchemaParser())->parse($fields);
     }
 
     /**
@@ -33,7 +37,7 @@ class FieldsDumper
     {
         $results = '';
 
-        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+        foreach ($this->fields as $field) {
             $results .= $this->getStub($field->getType(), $field->getName()).PHP_EOL;
         }
 
@@ -49,7 +53,7 @@ class FieldsDumper
     {
         $results = '';
 
-        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field->getName(), $this->ignores)) {
                 continue;
             }
@@ -71,7 +75,7 @@ class FieldsDumper
     {
         $results = '';
 
-        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field->getName(), $this->ignores)) {
                 continue;
             }
@@ -93,15 +97,15 @@ class FieldsDumper
     {
         $results = PHP_EOL;
 
-        foreach ((new SchemaParser())->parse($this->fields) as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field->getName(), $this->ignores)) {
                 continue;
             }
 
             $results .= Stub::createFromPath(__DIR__.'/../Stubs/scaffold/row.stub', [
-                'label' => ucwords($field->getName()),
+                'label'  => ucwords($field->getName()),
                 'column' => $field->getName(),
-                'var' => $var,
+                'var'    => $var,
             ])->render();
         }
 

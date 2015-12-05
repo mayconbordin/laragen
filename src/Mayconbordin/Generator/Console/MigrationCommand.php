@@ -80,8 +80,6 @@ class MigrationCommand extends Command
         $this->info("Setting up foreign key migrations.");
         $date = date('Y_m_d_His', strtotime('+1 second'));
         $this->generateFromSchema('foreign_keys', $schema, $date);
-
-        $this->info("Finished!");
     }
 
     /**
