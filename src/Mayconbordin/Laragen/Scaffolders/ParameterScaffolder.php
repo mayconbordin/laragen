@@ -33,6 +33,11 @@ class ParameterScaffolder implements Arrayable
     protected $component;
 
     /**
+     * @var string
+     */
+    protected $base;
+
+    /**
      * The constructor.
      *
      * @param string $name
@@ -44,7 +49,19 @@ class ParameterScaffolder implements Arrayable
         $this->name      = $name;
         $this->prefix    = $prefix;
         $this->component = $component;
+        $this->base      = $this->getBase();
+
         $this->entity    = $this->getEntity();
+    }
+
+    /**
+     * Get entity name.
+     *
+     * @return string
+     */
+    public function getBase()
+    {
+        return Str::singular(Str::snake(str_ireplace($this->component, '', $this->name)));
     }
 
     /**
@@ -54,7 +71,7 @@ class ParameterScaffolder implements Arrayable
      */
     public function getEntity()
     {
-        return Str::singular(Str::snake(str_ireplace($this->component, '', $this->name)));
+        return str_replace(['-', '_'], '', $this->base);
     }
 
     /**
@@ -74,7 +91,7 @@ class ParameterScaffolder implements Arrayable
      */
     public function getLowerEntities()
     {
-        return strtolower(Str::plural($this->entity));
+        return lcfirst($this->getStudlyPluralEntity());
     }
 
     /**
@@ -84,7 +101,7 @@ class ParameterScaffolder implements Arrayable
      */
     public function getLowerSingularEntity()
     {
-        return strtolower(Str::singular($this->entity));
+        return lcfirst($this->getStudlyEntity());
     }
 
     /**
@@ -94,7 +111,7 @@ class ParameterScaffolder implements Arrayable
      */
     public function getStudlyEntity()
     {
-        return Str::studly($this->entity);
+        return Str::studly($this->base);
     }
 
     /**
@@ -135,17 +152,17 @@ class ParameterScaffolder implements Arrayable
     public function toArray()
     {
         return [
-            'prefix' => $this->prefix,
-            'entity' => $this->entity,
-            'lower_entities' => $this->getLowerEntities(),
+            'prefix'                => $this->prefix,
+            'entity'                => $this->getEntity(),
+            'lower_entities'        => $this->getLowerEntities(),
             'lower_singular_entity' => $this->getLowerSingularEntity(),
-            'studly_entity' => $this->getStudlyEntity(),
-            'studly_plural_entity' => $this->getStudlyPluralEntity(),
-            'prefix_dot' => $this->getPrefixDot(),
-            'prefix_slash' => $this->getPrefixSlash(),
-            'model_namespace' => Config::get('generator.model.namespace'),
-            'request_namespace' => Config::get('generator.request.namespace'),
-            'repository_namespace' => Config::get('generator.repository.namespace'),
+            'studly_entity'         => $this->getStudlyEntity(),
+            'studly_plural_entity'  => $this->getStudlyPluralEntity(),
+            'prefix_dot'            => $this->getPrefixDot(),
+            'prefix_slash'          => $this->getPrefixSlash(),
+            'model_namespace'       => Config::get('generator.model.namespace'),
+            'request_namespace'     => Config::get('generator.request.namespace'),
+            'repository_namespace'  => Config::get('generator.repository.namespace'),
         ];
     }
 }

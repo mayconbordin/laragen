@@ -13,9 +13,9 @@ class ParameterScaffolderTest extends TestCase
 
         //$data = $instance->toArray();
 
-        $this->assertEquals('event_activity', $instance->getEntity());
-        $this->assertEquals('event_activities', $instance->getLowerEntities());
-        $this->assertEquals('event_activity', $instance->getLowerSingularEntity());
+        $this->assertEquals('eventactivity', $instance->getEntity());
+        $this->assertEquals('eventActivities', $instance->getLowerEntities());
+        $this->assertEquals('eventActivity', $instance->getLowerSingularEntity());
         $this->assertEquals('EventActivity', $instance->getStudlyEntity());
         $this->assertEquals('EventActivities', $instance->getStudlyPluralEntity());
     }
