@@ -116,7 +116,7 @@ class ScaffoldGenerator
      */
     public function getModelName(Table $table)
     {
-        return str_replace('/', '\\', Str::studly($this->getEntity($table)));
+        return Str::studly(str_replace(' ', '/', ucwords(str_replace('/', ' ', $table->getName()))));
     }
 
     /**
