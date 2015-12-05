@@ -1,4 +1,4 @@
-<?php namespace Mayconbordin\Laragen\Providers;
+<?php namespace Mayconbordin\Laragen;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -47,7 +47,7 @@ class GeneratorServiceProvider extends ServiceProvider
     public function register()
     {
         foreach ($this->consoles as $console) {
-            $this->commands('Mayconbordin\Generator\Console\\'.$console.'Command');
+            $this->commands('Mayconbordin\Laragen\Console\\'.$console.'Command');
         }
     }
 }
