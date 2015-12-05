@@ -51,8 +51,8 @@ trait SchemaFieldsTrait
     {
         $this->schemaGenerator = new SchemaGenerator(
             $this->option('connection'),
-            $this->option('defaultIndexNames'),
-            $this->option('defaultFKNames')
+            $this->option('default-index-names'),
+            $this->option('default-fk-names')
         );
 
         if ($this->option('tables')) {
