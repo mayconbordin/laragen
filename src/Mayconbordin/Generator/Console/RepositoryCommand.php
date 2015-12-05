@@ -1,7 +1,7 @@
 <?php namespace Mayconbordin\Generator\Console;
 
 use Illuminate\Console\Command;
-use Mayconbordin\Generator\Generator\ModelGenerator;
+use Mayconbordin\Generator\Generator\RepositoryGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -26,7 +26,7 @@ class RepositoryCommand extends Command
      */
     public function fire()
     {
-        $generator = new ModelGenerator([
+        $generator = new RepositoryGenerator([
             'name'     => $this->argument('name'),
             'force'    => $this->option('force'),
         ]);
