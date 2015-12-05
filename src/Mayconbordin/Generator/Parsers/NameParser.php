@@ -58,7 +58,9 @@ class NameParser
      */
     private function getAction(&$segments)
     {
-        if ($this->normalizeActionName(end(array_values($segments))) != null) {
+        $temp = array_values($segments);
+
+        if ($this->normalizeActionName(end($temp)) != null) {
             return $this->normalizeActionName(array_pop($segments));
         }
 
