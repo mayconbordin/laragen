@@ -97,6 +97,18 @@ class ScaffoldGenerator
     }
 
     /**
+     * Get repository name for the table.
+     *
+     * @param Table $table
+     * @return string
+     */
+    public function getRepositoryName(Table $table)
+    {
+        $repository = Str::studly($this->getEntity($table)).'Repository';
+        return str_replace('/', '\\', $repository);
+    }
+
+    /**
      * Get all the tables in the schema.
      *
      * @return array
@@ -218,7 +230,7 @@ class ScaffoldGenerator
      */
     public function generateControllers()
     {
-        if (!$this->confirm('Do you want to generate a controllers?')) {
+        if (!$this->confirm('Do you want to generate the controllers?')) {
             return;
         }
 
@@ -228,6 +240,23 @@ class ScaffoldGenerator
                 '--force'      => $this->console->option('force'),
                 '--repository' => $this->console->option('repository'),
                 '--scaffold'   => !$this->console->option('repository'),
+            ]);
+        }
+    }
+
+    /**
+     * Generate repositories.
+     */
+    public function generateRepositories()
+    {
+        if (!$this->console->option('repository') || !$this->confirm('Do you want to generate the repositories?')) {
+            return;
+        }
+
+        foreach ($this->getMainTables() as $table) {
+            $this->console->call('generate:repository', [
+                'name'    => $this->getRepositoryName($table),
+                '--force' => $this->console->option('force')
             ]);
         }
     }
@@ -441,6 +470,7 @@ class ScaffoldGenerator
     {
         $this->generateModels();
         $this->generateMigrations();
+        $this->generateRepositories();
         $this->generateSeeds();
         $this->generateRequests();
         $this->generateControllers();
