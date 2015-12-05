@@ -5,7 +5,7 @@ use Illuminate\Support\Str;
 use Mayconbordin\Laragen\Exceptions\FileAlreadyExistsException;
 use Mayconbordin\Laragen\FormDumpers\FieldsDumper;
 use Mayconbordin\Laragen\FormDumpers\TableDumper;
-use Mayconbordin\Laragen\Scaffolders\ControllerScaffolder;
+use Mayconbordin\Laragen\Scaffolders\ParameterScaffolder;
 use Mayconbordin\Laragen\Schema\Table;
 
 class ScaffoldGenerator
@@ -289,11 +289,11 @@ class ScaffoldGenerator
      * Get controller scaffolder instance.
      *
      * @param Table $table
-     * @return ControllerScaffolder
+     * @return ParameterScaffolder
      */
     public function getControllerScaffolder(Table $table)
     {
-        return new ControllerScaffolder($this->getEntity($table), $this->getPrefix());
+        return new ParameterScaffolder($this->getEntity($table), $this->getPrefix());
     }
 
     /**

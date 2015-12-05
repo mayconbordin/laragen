@@ -4,7 +4,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use \Config;
 
-class ControllerScaffolder implements Arrayable
+class ParameterScaffolder implements Arrayable
 {
     /**
      * The name of controller.
@@ -28,12 +28,18 @@ class ControllerScaffolder implements Arrayable
     protected $entity;
 
     /**
+     * @var string
+     */
+    protected $component;
+
+    /**
      * The constructor.
      *
-     * @param string      $name
+     * @param string $name
      * @param string|null $prefix
+     * @param string $component
      */
-    public function __construct($name, $prefix = null)
+    public function __construct($name, $prefix = null, $component = 'controller')
     {
         $this->name = $name;
         $this->prefix = $prefix;
@@ -47,7 +53,7 @@ class ControllerScaffolder implements Arrayable
      */
     public function getEntity()
     {
-        return Str::singular(str_replace('controller', '', strtolower($this->name)));
+        return Str::singular(str_replace($this->component, '', strtolower($this->name)));
     }
 
     /**

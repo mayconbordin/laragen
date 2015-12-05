@@ -1,6 +1,6 @@
 <?php namespace Mayconbordin\Laragen\Generator;
 
-use Mayconbordin\Laragen\Scaffolders\ControllerScaffolder;
+use Mayconbordin\Laragen\Scaffolders\ParameterScaffolder;
 
 class RepositoryGenerator extends Generator
 {
@@ -28,6 +28,6 @@ class RepositoryGenerator extends Generator
      */
     public function getReplacements()
     {
-        return array_merge(parent::getReplacements(), (new ControllerScaffolder($this->getName()))->toArray());
+        return array_merge(parent::getReplacements(), (new ParameterScaffolder($this->getName()))->toArray(), null, 'repository');
     }
 }

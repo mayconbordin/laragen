@@ -1,6 +1,6 @@
 <?php namespace Mayconbordin\Laragen\Generator;
 
-use Mayconbordin\Laragen\Scaffolders\ControllerScaffolder;
+use Mayconbordin\Laragen\Scaffolders\ParameterScaffolder;
 
 class ControllerGenerator extends Generator
 {
@@ -51,10 +51,10 @@ class ControllerGenerator extends Generator
             $this->stub = 'controller/resource';
         } elseif ($this->scaffold) {
             $this->stub = 'controller/scaffold';
-            $this->scaffolder = new ControllerScaffolder($this->getClass(), $this->getPrefix());
+            $this->scaffolder = new ParameterScaffolder($this->getClass(), $this->getPrefix());
         } elseif ($this->repository) {
             $this->stub = 'controller/scaffold_repository';
-            $this->scaffolder = new ControllerScaffolder($this->getClass(), $this->getPrefix());
+            $this->scaffolder = new ParameterScaffolder($this->getClass(), $this->getPrefix());
         }
     }
 
