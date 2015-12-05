@@ -28,6 +28,7 @@ class RepositoryCommand extends Command
     {
         $generator = new RepositoryGenerator([
             'name'     => $this->argument('name'),
+            'entity'   => $this->argument('entity'),
             'force'    => $this->option('force'),
         ]);
 
@@ -56,6 +57,7 @@ class RepositoryCommand extends Command
     public function getOptions()
     {
         return [
+            ['entity', 'e', InputOption::VALUE_OPTIONAL, 'The name of the entity for the repository.', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];
     }

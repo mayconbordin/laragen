@@ -31,6 +31,7 @@ class ControllerCommand extends Command
             'resource'   => $this->option('resource'),
             'scaffold'   => $this->option('scaffold'),
             'repository' => $this->option('repository'),
+            'entity'     => $this->option('entity'),
             'force'      => $this->option('force'),
         ]);
 
@@ -62,6 +63,7 @@ class ControllerCommand extends Command
             ['resource', 'r', InputOption::VALUE_NONE, 'Generate a resource controller.', null],
             ['scaffold', 's', InputOption::VALUE_NONE, 'Generate a scaffold controller.', null],
             ['repository', '', InputOption::VALUE_NONE, 'Generate a repository scaffold controller.', null],
+            ['entity', 'e', InputOption::VALUE_OPTIONAL, 'The name of the entity for the controller.', null],
             ['force', 'f', InputOption::VALUE_NONE, 'Force the creation if file already exists.', null],
         ];
     }

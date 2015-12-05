@@ -38,13 +38,14 @@ class ParameterScaffolder implements Arrayable
      * @param string $name
      * @param string|null $prefix
      * @param string $component
+     * @param null $entity
      */
-    public function __construct($name, $prefix = null, $component = 'controller')
+    public function __construct($name, $prefix = null, $component = 'controller', $entity = null)
     {
         $this->name      = $name;
         $this->prefix    = $prefix;
         $this->component = $component;
-        $this->entity    = $this->getEntity();
+        $this->entity    = is_null($entity) ? $this->getEntity() : $entity;
     }
 
     /**
