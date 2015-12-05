@@ -520,6 +520,7 @@ class ScaffoldGenerator
         $this->generateControllers();
         $this->runMigration();
         $this->generateViews();
+        $this->generateLangResources();
         $this->appendRoutes();
     }
 }
