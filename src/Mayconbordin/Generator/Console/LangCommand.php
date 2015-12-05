@@ -49,7 +49,7 @@ class LangCommand extends Command
     public function getArguments()
     {
         return [
-            ['name', InputArgument::OPTIONAL, 'The name of language resource being generated.', null],
+            ['name', InputArgument::REQUIRED, 'The name of language resource being generated.', null],
         ];
     }
 
