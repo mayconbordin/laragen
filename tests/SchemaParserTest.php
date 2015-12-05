@@ -1,6 +1,5 @@
 <?php namespace Mayconbordin\Laragen\Tests;
 
-
 use Mayconbordin\Laragen\Parsers\SchemaParser;
 
 class SchemaParserTest extends TestCase

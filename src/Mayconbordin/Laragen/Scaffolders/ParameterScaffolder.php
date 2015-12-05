@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
-use \Config;
+use Illuminate\Support\Facades\Config;
 
 class ParameterScaffolder implements Arrayable
 {
@@ -54,7 +54,7 @@ class ParameterScaffolder implements Arrayable
      */
     public function getEntity()
     {
-        return Str::singular(str_replace($this->component, '', strtolower($this->name)));
+        return Str::singular(Str::snake(str_ireplace($this->component, '', $this->name)));
     }
 
     /**
