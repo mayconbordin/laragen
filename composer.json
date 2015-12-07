@@ -27,7 +27,8 @@
   },
   "archive": {
     "exclude": [
-      "/tests"
+      "/tests",
+      "/artwork"
     ]
   },
   "autoload": {
