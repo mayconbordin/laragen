@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Composer;
 use Mayconbordin\Laragen\Console\Helpers\SchemaFieldsTrait;
+use Mayconbordin\Laragen\Exceptions\FileAlreadyExistsException;
 use Mayconbordin\Laragen\Exceptions\MethodNotFoundException;
 use Mayconbordin\Laragen\Generator\MigrationGenerator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -45,7 +46,7 @@ class MigrationCommand extends Command
     /**
      * Generate a migration from the command line arguments.
      *
-     * @throws \Mayconbordin\Generator\Exceptions\FileAlreadyExistsException
+     * @throws FileAlreadyExistsException
      */
     protected function generateFromCommand()
     {
@@ -90,7 +91,7 @@ class MigrationCommand extends Command
      * @param string $date The date to be used for generating the migrations
      *
      * @throws MethodNotFoundException
-     * @throws \Mayconbordin\Generator\Exceptions\FileAlreadyExistsException
+     * @throws FileAlreadyExistsException
      */
     protected function generateFromSchema($method, $schema, $date)
     {
@@ -110,7 +111,7 @@ class MigrationCommand extends Command
             $generator = new MigrationGenerator([
                 'name'             => $migrationName,
                 'raw_name'         => $date .'_'. $migrationName,
-                'action'           => 'create_simple',
+                'action'           => ($method == 'create') ? 'create_simple' : 'add',
                 'force'            => $this->option('force'),
                 'table'            => $table,
                 'generate_foreign' => ($method == 'foreign_keys'),
