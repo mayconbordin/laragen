@@ -195,7 +195,7 @@ class MigrationGenerator extends Generator
     {
         $syntax = '';
 
-        if (($field->hasForeign() && $this->generateForeign) || $this->onlyForeign) {
+        if ($field->hasForeign() && ($this->generateForeign || $this->onlyForeign)) {
             $syntax .= sprintf("\$table->dropForeign('%s');", $this->getForeignKeyName($field, true))
                     . "\n" . str_repeat(' ', 12);
         }
