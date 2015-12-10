@@ -21,6 +21,14 @@ This tool can generate the following components:
 2. [Configuration](#configuration)
 4. [Generator Commands](#generator-commands)
 	1. [Migrations](#migrations)
+	2. [Models](#models)
+	3. [Repositories](#repositories)
+	4. [Controllers](#controllers)
+	5. [Database Seeders](#database-seeders)
+	6. [Views](#views)
+	7. [Form Requests](#form-requests)
+	8. [Language Resources](#language-resources)
+	9. [Scaffolding](#scaffolding)
 
 ## Installation
 
@@ -69,6 +77,7 @@ Depending on the keywork used in the name of the migration, a different template
 #### Options
  - `--fields[=FIELDS]`: The fields of the migration, separated by comma(,).
  - `--action`: The name of the action: create, create_simple, add, delete or drop. Overwrites the action parsed from the migration name.
+ - `-c, --connection`: The database connection to use. Default: `database.default` from the configuration.
  - `-t, --tables[=TABLES]`: A list of tables you wish to generate migrations for, separated by a comma: `users,posts,comments`.
  - `-i, --ignore[=IGNORE]`: A list of tables you wish to ignore, separated by a comma: `users,posts,comments`.
  - `--default-index-names`: If provided, won't use the index names from the database for migrations.
@@ -109,3 +118,113 @@ Create migrations for all tables in the `mysql` database connection:
 ```bash
 php artisan generate:migration --connection=mysql
 ```
+
+#### Pivot Table Migration
+
+```bash
+php artisan generate:pivot [options] <table_one> <table_two>
+```
+
+#### Options
+ - `-t, --timestamp`: Add timestamp to migration schema.
+
+### Models
+
+```bash
+php artisan generate:model [options] <name>
+```
+
+#### Options
+ - `--fields[=FIELDS]`: The fields of the model, separated by comma(,). The syntax is the same as that of migrations and can be used to generate validation rules.
+ - `--fillable`: Comma-separated list of field names that are fillable.
+ - `--table-name`: In case the name of the table differs from that of the model.
+ 
+### Repositories
+
+```bash
+php artisan generate:repository [options] <name>
+```
+
+Create a new repository based on [reloquent](https://github.com/mayconbordin/reloquent), the model that it represents will be infered from the name (e.g. `UserRepository` will refer to the `User` model).
+
+### Controllers
+
+```bash
+php artisan generate:controller [options] <name>
+```
+
+Create a new controller with the given `<name>` (e.g. `UserController`). By default, the controller created has no methods, for more options see below.
+
+#### Options
+ - `-r, --resource`: Will generate a resource controller, i.e. with CRUD methods (the methods have no logic).
+ - `-s, --scaffold`: Will generate a scaffolding controller, i.e. with CRUD methods and logic.
+ - `--repository`: Same as an scaffolding controller, but using a repository for data manipuation instead of Eloquent models.
+
+### Database Seeders
+
+```bash
+php artisan generate:seed [options] <name>
+```
+
+#### Options
+ - `-m, --master`: Will generate the master database seeder.
+
+### Views
+
+```bash
+php artisan generate:view [options] <name>
+```
+
+Create a new view file with the name `<name>.blade.php`.
+
+#### Options
+ - `-e, --extends`: The name of view layout being used. Default: `layouts.master`.
+ - `-s, --section`: The name of section being used. Default: `content`.
+ - `-c, --content`: The view content.
+ - `-t, --template`: The path of view template. Inform it to use a custom template.
+ - `-m, --master`: Create a master view.
+ - `-p, --plain`: Create a blank view.
+
+### Form Request
+
+```bash
+php artisan generate:request [options] <name>
+```
+
+#### Options
+ - `-r, --rules`: List of rules for validation. Example: `name:string|max(255)|required, age:integer|required, email:unique(users;email_address)|required`.
+ - `--fields[=FIELDS]`: The fields for creating the rules. Separated with comma (,).
+ - `-s, --scaffold`: Determine whether the request class generated with scaffold.
+ - `-a, --auth`: Determine whether the request class needs authorized.
+
+### Language Resources
+
+```bash
+php artisan generate:lang [options] <name>
+```
+
+Create a new language resource with the given `<name>`.
+
+#### Options
+ - `-l, --languages`: The list of languages (comma-separated) in which the resource will be created. Default: en.
+ - `-t, --translations`: List of translations to be included in the resource file. Example: `"test1=\'test one\', test2=\'teste two\'"`.
+
+### Scaffolding
+
+```bash
+php artisan generate:scaffold [options] <name>
+```
+
+Create all the above components for the entity with the given `<name>`.
+
+#### Options
+ - `--fields[=FIELDS]`: The fields of the entity, separated by comma(,).
+ - `--prefix`: The prefix for the view path, routes and controller class(es).
+ - `-c, --connection`: The database connection to use. Default: `database.default` from the configuration.
+ - `-t, --tables[=TABLES]`: A list of tables you wish to generate migrations for, separated by a comma: `users,posts,comments`.
+ - `-i, --ignore[=IGNORE]`: A list of tables you wish to ignore, separated by a comma: `users,posts,comments`.
+ - `--default-index-names`: If provided, won't use the index names from the database for migrations.
+ - `--default-fk-names`: If provided, won't use the foreign key names from the database for migrations.
+ - `-l, --languages`: The list of languages (comma-separated) in which the resource will be created. Default: en.
+ - `--no-question`: Don't ask any question.
+ - `--repository`: Generate the repository classes and controllers that use the repositories.
